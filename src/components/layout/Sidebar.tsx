@@ -8,21 +8,24 @@ import {
   Receipt,
   Search,
   Settings,
+  ShieldCheck,
   TrendingUp,
   Users,
 } from "lucide-react";
-import type { Page } from "../../types";
+import type { Page, UserRole } from "../../types";
 import logoLight from "../../assets/logo-light.png";
 
 type SidebarProps = {
   activePage: Page;
   onNavigate: (page: Page) => void;
+  role?: UserRole;
 };
 
 const items: Array<{
   label: string;
   page: Page;
   icon: ComponentType<{ size?: number }>;
+  adminOnly?: boolean;
 }> = [
   { label: "Search", page: "search", icon: Search },
   { label: "Dashboard", page: "dashboard", icon: Home },
@@ -30,13 +33,16 @@ const items: Array<{
   { label: "Customers", page: "customers", icon: Users },
   { label: "Jobs", page: "orders", icon: ClipboardList },
   { label: "Receipts", page: "receipts", icon: Receipt },
-  { label: "Reports", page: "reports", icon: TrendingUp },
-  { label: "Products / Services", page: "products", icon: Package },
-  { label: "Settings", page: "settings", icon: Settings },
-  { label: "Backup", page: "backup", icon: ArchiveRestore },
+  { label: "Reports", page: "reports", icon: TrendingUp, adminOnly: true },
+  { label: "Products / Services", page: "products", icon: Package, adminOnly: true },
+  { label: "Manage Staff", page: "manage-staff", icon: ShieldCheck, adminOnly: true },
+  { label: "Settings", page: "settings", icon: Settings, adminOnly: true },
+  { label: "Backup", page: "backup", icon: ArchiveRestore, adminOnly: true },
 ];
 
-export function Sidebar({ activePage, onNavigate }: SidebarProps) {
+export function Sidebar({ activePage, onNavigate, role }: SidebarProps) {
+  const visibleItems = items.filter((item) => !item.adminOnly || role === "admin");
+
   return (
     <aside className="sidebar no-print">
       <div className="brand-block brand-logo-block">
@@ -44,7 +50,7 @@ export function Sidebar({ activePage, onNavigate }: SidebarProps) {
       </div>
 
       <nav className="nav-list">
-        {items.map((item) => {
+        {visibleItems.map((item) => {
           const Icon = item.icon;
           const isActive = activePage === item.page;
 
@@ -63,8 +69,8 @@ export function Sidebar({ activePage, onNavigate }: SidebarProps) {
       </nav>
 
       <div className="sidebar-note">
-        <strong>Offline only</strong>
-        <span>Sleek Stitch Atelier records are stored on this device. Export backups regularly.</span>
+        <strong>Sleek Stitch Only</strong>
+        <span>Staff access is controlled by admin through Manage Staff.</span>
       </div>
     </aside>
   );

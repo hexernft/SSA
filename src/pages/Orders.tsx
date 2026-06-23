@@ -13,6 +13,7 @@ type OrdersProps = {
   orders: Order[];
   onChanged: () => Promise<void>;
   onOpenCustomer: (customerId: string) => void;
+  canDelete: boolean;
 };
 
 type OrderForm = {
@@ -38,7 +39,7 @@ const emptyForm: OrderForm = {
   notes: "",
 };
 
-export function Orders({ customers, orders, onChanged, onOpenCustomer }: OrdersProps) {
+export function Orders({ customers, orders, onChanged, onOpenCustomer, canDelete }: OrdersProps) {
   const [form, setForm] = useState<OrderForm>(emptyForm);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<OrderStatus | "all">("all");
@@ -356,7 +357,9 @@ export function Orders({ customers, orders, onChanged, onOpenCustomer }: OrdersP
                   <td>
                     <div className="button-row">
                       <Button variant="secondary" onClick={() => editOrder(order)}>Edit</Button>
-                      <Button variant="danger" onClick={() => deleteOrder(order.id)}>Delete</Button>
+                      {canDelete ? (
+                        <Button variant="danger" onClick={() => deleteOrder(order.id)}>Delete</Button>
+                      ) : null}
                     </div>
                   </td>
                 </tr>

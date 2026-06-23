@@ -14,6 +14,7 @@ type CustomersProps = {
   sales: Sale[];
   onChanged: () => Promise<void>;
   onOpenCustomer: (customerId: string) => void;
+  canDelete: boolean;
 };
 
 type CustomerForm = {
@@ -47,7 +48,7 @@ const emptyForm: CustomerForm = {
   notes: "",
 };
 
-export function Customers({ customers, invoices, sales, onChanged, onOpenCustomer }: CustomersProps) {
+export function Customers({ customers, invoices, sales, onChanged, onOpenCustomer, canDelete }: CustomersProps) {
   const [form, setForm] = useState<CustomerForm>(emptyForm);
   const [search, setSearch] = useState("");
 
@@ -381,9 +382,11 @@ export function Customers({ customers, invoices, sales, onChanged, onOpenCustome
                         <Button variant="secondary" onClick={() => editCustomer(customer)}>
                           Edit
                         </Button>
-                        <Button variant="danger" onClick={() => deleteCustomer(customer.id)}>
-                          Delete
-                        </Button>
+                        {canDelete ? (
+                          <Button variant="danger" onClick={() => deleteCustomer(customer.id)}>
+                            Delete
+                          </Button>
+                        ) : null}
                       </div>
                     </td>
                   </tr>

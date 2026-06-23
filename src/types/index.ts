@@ -27,6 +27,16 @@ export type OrderStatus =
 export type SaleSource = "invoice" | "direct";
 export type PaymentMethod = "cash" | "transfer" | "pos" | "card" | "other";
 export type SpecialDateType = "birthday" | "anniversary" | "special";
+export type UserRole = "admin" | "staff";
+
+export type StaffProfile = {
+  id: string;
+  fullName: string;
+  role: UserRole;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt?: string;
+};
 
 export type Page =
   | "search"
@@ -45,7 +55,8 @@ export type Page =
   | "receipt-details"
   | "reports"
   | "settings"
-  | "backup";
+  | "backup"
+  | "manage-staff";
 
 export type BusinessSettings = {
   id: string;

@@ -1,5 +1,4 @@
 import type { CelebrationReminder, Invoice, OrderReminder, Sale } from "../types";
-import { FilePlus2 } from "lucide-react";
 import { isSameMonth, isToday } from "../lib/dates";
 import { formatMoney } from "../lib/money";
 import { formatOrderDueText } from "../lib/orderReminders";
@@ -24,7 +23,6 @@ export function Dashboard({
   sales,
   celebrations,
   orderReminders,
-  onCreateInvoice,
   onOpenOrders,
   onOpenCustomer,
 }: DashboardProps) {
@@ -50,9 +48,6 @@ export function Dashboard({
           title="Command Center"
           subtitle="A clear view of invoices, cash received, balances, jobs due soon, and customer moments that need attention."
         />
-        <div className="button-row">
-          <Button onClick={onCreateInvoice}><FilePlus2 size={16} /> Create Invoice</Button>
-        </div>
       </div>
 
       <InstallAppCard />
@@ -190,3 +185,4 @@ export function Dashboard({
     </div>
   );
 }
+

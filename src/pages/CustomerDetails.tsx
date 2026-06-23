@@ -28,6 +28,7 @@ type CustomerDetailsProps = {
   sales: Sale[];
   onBack: () => void;
   onChanged: () => Promise<void>;
+  canDelete: boolean;
 };
 
 type SpecialDateForm = {
@@ -118,6 +119,7 @@ export function CustomerDetails({
   sales,
   onBack,
   onChanged,
+  canDelete,
 }: CustomerDetailsProps) {
   const [specialDateForm, setSpecialDateForm] = useState<SpecialDateForm>(emptySpecialDateForm);
   const [measurementForm, setMeasurementForm] = useState<MeasurementForm>(emptyMeasurementForm);
@@ -500,7 +502,9 @@ export function CustomerDetails({
                       Print
                     </Button>
                     <Button variant="secondary" onClick={() => editOrder(order)}>Edit</Button>
-                    <Button variant="danger" onClick={() => deleteOrder(order.id)}>Delete</Button>
+                    {canDelete ? (
+                      <Button variant="danger" onClick={() => deleteOrder(order.id)}>Delete</Button>
+                    ) : null}
                   </div>
                 </div>
               ))}
@@ -568,7 +572,9 @@ export function CustomerDetails({
                       Print
                     </Button>
                     <Button variant="secondary" onClick={() => editMeasurement(measurement)}>Edit</Button>
-                    <Button variant="danger" onClick={() => deleteMeasurement(measurement.id)}>Delete</Button>
+                    {canDelete ? (
+                      <Button variant="danger" onClick={() => deleteMeasurement(measurement.id)}>Delete</Button>
+                    ) : null}
                   </div>
                 </div>
               ))}
@@ -614,7 +620,9 @@ export function CustomerDetails({
                   </div>
                   <div className="button-row">
                     <Button variant="secondary" onClick={() => editSpecialDate(date)}>Edit</Button>
-                    <Button variant="danger" onClick={() => deleteSpecialDate(date.id)}>Delete</Button>
+                    {canDelete ? (
+                      <Button variant="danger" onClick={() => deleteSpecialDate(date.id)}>Delete</Button>
+                    ) : null}
                   </div>
                 </div>
               ))}

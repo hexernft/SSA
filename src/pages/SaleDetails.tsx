@@ -16,6 +16,7 @@ type SaleDetailsProps = {
   onBack: () => void;
   onDelete: (saleId: string) => Promise<void>;
   onUpdated: (saleId: string) => Promise<void>;
+  canManage: boolean;
 };
 
 export function SaleDetails({
@@ -25,6 +26,7 @@ export function SaleDetails({
   onBack,
   onDelete,
   onUpdated,
+  canManage,
 }: SaleDetailsProps) {
   const saleRecord = sale as Sale;
   const [isEditing, setIsEditing] = useState(false);
@@ -395,13 +397,17 @@ export function SaleDetails({
           <Button variant="secondary" onClick={onBack}>
             Back
           </Button>
-          <Button variant="secondary" onClick={() => setIsEditing(true)}>
-            Edit
-          </Button>
+          {canManage ? (
+            <Button variant="secondary" onClick={() => setIsEditing(true)}>
+              Edit
+            </Button>
+          ) : null}
           <Button onClick={() => window.print()}>Print</Button>
-          <Button variant="danger" onClick={() => onDelete(saleRecord.id)}>
-            Delete
-          </Button>
+          {canManage ? (
+            <Button variant="danger" onClick={() => onDelete(saleRecord.id)}>
+              Delete
+            </Button>
+          ) : null}
         </div>
       </div>
 

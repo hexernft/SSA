@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import type { Session } from "@supabase/supabase-js";
 import { AppShell } from "../components/layout/AppShell";
 import {
   db,
@@ -13,6 +14,8 @@ import { createId } from "../lib/ids";
 import { getUpcomingOrders } from "../lib/orderReminders";
 import { getUpcomingCelebrations } from "../lib/reminders";
 import { applyTheme, getStoredTheme, type ThemeMode } from "../lib/theme";
+import { supabase } from "../lib/supabase";
+import { getMyProfile } from "../lib/staffProfiles";
 import type {
   BusinessSettings,
   Customer,
@@ -28,6 +31,8 @@ import type {
   Sale,
   SaleFormState,
   SaleItem,
+  StaffProfile,
+  UserRole,
 } from "../types";
 import { AddSale } from "../pages/AddSale";
 import { Backup } from "../pages/Backup";
@@ -37,6 +42,8 @@ import { Customers } from "../pages/Customers";
 import { Dashboard } from "../pages/Dashboard";
 import { InvoiceDetails } from "../pages/InvoiceDetails";
 import { Invoices } from "../pages/Invoices";
+import { Login } from "../pages/Login";
+import { ManageStaff } from "../pages/ManageStaff";
 import { Orders } from "../pages/Orders";
 import { Products } from "../pages/Products";
 import { ReceiptDetails } from "../pages/ReceiptDetails";
@@ -47,7 +54,28 @@ import { Search } from "../pages/Search";
 import { Sales } from "../pages/Sales";
 import { Settings } from "../pages/Settings";
 
+const adminOnlyPages: Page[] = ["reports", "products", "settings", "backup", "manage-staff", "sales", "add-sale", "sale-details"];
+
+function canAccessPage(page: Page, role: UserRole) {
+  return role === "admin" || !adminOnlyPages.includes(page);
+}
+
+function getErrorMessage(error: unknown) {
+  if (error && typeof error === "object" && "message" in error) {
+    const message = (error as { message?: string }).message;
+    if (typeof message === "string" && message.trim()) {
+      return message;
+    }
+  }
+
+  return "Unable to load staff profile.";
+}
+
 export function App() {
+  const [session, setSession] = useState<Session | null>(null);
+  const [profile, setProfile] = useState<StaffProfile | null>(null);
+  const [authError, setAuthError] = useState("");
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
   const [activePage, setActivePage] = useState<Page>("dashboard");
   const [theme, setTheme] = useState<ThemeMode>(() => getStoredTheme());
   const [settings, setSettings] = useState<BusinessSettings | null>(null);
@@ -85,6 +113,86 @@ export function App() {
   useEffect(() => {
     applyTheme(theme);
   }, [theme]);
+
+  async function loadProfileForSession(currentSession: Session | null) {
+    setSession(currentSession);
+
+    if (!currentSession?.user) {
+      setProfile(null);
+      return;
+    }
+
+    setAuthError("");
+
+    try {
+      const loadedProfile = await getMyProfile(currentSession.user.id);
+
+      if (!loadedProfile) {
+        setProfile(null);
+        setAuthError(
+          "This account signed in successfully, but no staff profile was found. Please ask an admin to add this user in Supabase profiles."
+        );
+        await supabase.auth.signOut();
+        return;
+      }
+
+      if (!loadedProfile.isActive) {
+        setProfile(null);
+        setAuthError(
+          "This account is not active for Sleek Stitch Atelier. Ask an admin to enable access."
+        );
+        await supabase.auth.signOut();
+        return;
+      }
+
+      setProfile(loadedProfile);
+    } catch (error) {
+      setProfile(null);
+      setAuthError(getErrorMessage(error));
+    }
+  }
+
+  useEffect(() => {
+    let isMounted = true;
+
+    supabase.auth.getSession().then(({ data }) => {
+      if (!isMounted) return;
+      loadProfileForSession(data.session).finally(() => {
+        if (isMounted) setIsAuthLoading(false);
+      });
+    });
+
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+      loadProfileForSession(nextSession);
+    });
+
+    return () => {
+      isMounted = false;
+      listener.subscription.unsubscribe();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (profile && !canAccessPage(activePage, profile.role)) {
+      setActivePage("dashboard");
+    }
+  }, [activePage, profile]);
+
+  function navigate(page: Page) {
+    if (profile && canAccessPage(page, profile.role)) {
+      setActivePage(page);
+      return;
+    }
+
+    setActivePage("dashboard");
+  }
+
+  async function handleSignOut() {
+    await supabase.auth.signOut();
+    setProfile(null);
+    setSession(null);
+    setActivePage("dashboard");
+  }
 
   function toggleTheme() {
     setTheme((current) => (current === "dark" ? "light" : "dark"));
@@ -138,7 +246,7 @@ export function App() {
     if (!fullInvoice) {
       setSelectedInvoice(null);
       setSelectedInvoiceItems([]);
-      setActivePage("invoices");
+      navigate("invoices");
       return;
     }
 
@@ -152,13 +260,13 @@ export function App() {
     if (!fullSale) {
       setSelectedSale(null);
       setSelectedSaleItems([]);
-      setActivePage("sales");
+      navigate("search");
       return;
     }
 
     setSelectedSale(fullSale.sale);
     setSelectedSaleItems(fullSale.items);
-    setActivePage("sale-details");
+    navigate("sale-details");
   }
 
   async function openReceipt(receiptId: string) {
@@ -420,7 +528,7 @@ export function App() {
     setSelectedInvoice(null);
     setSelectedInvoiceItems([]);
     await refreshData();
-    setActivePage("invoices");
+    navigate("invoices");
   }
 
   async function deleteSale(saleId: string) {
@@ -450,20 +558,39 @@ export function App() {
     setSelectedSale(null);
     setSelectedSaleItems([]);
     await refreshData();
-    setActivePage("search");
+    navigate("search");
   }
 
-  if (isLoading) {
-    return <div className="loading-screen">Loading Sleek Stitch Atelier sales & invoice app...</div>;
+  if (isAuthLoading || isLoading) {
+    return <div className="loading-screen">Loading Sleek Stitch Atelier business console...</div>;
   }
+
+  if (!profile) {
+    return (
+      <>
+        <Login />
+        {authError ? <div className="auth-floating-error">{authError}</div> : null}
+      </>
+    );
+  }
+
+  const isAdmin = profile.role === "admin";
 
   return (
-    <AppShell activePage={activePage} onNavigate={setActivePage} theme={theme} onThemeToggle={toggleTheme}>
+    <AppShell
+      activePage={activePage}
+      onNavigate={navigate}
+      theme={theme}
+      onThemeToggle={toggleTheme}
+      profile={profile}
+      role={profile.role}
+      onSignOut={handleSignOut}
+    >
       {activePage === "search" ? (
         <Search
           customers={customers}
           invoices={invoices}
-          sales={sales}
+          sales={isAdmin ? sales : []}
           orders={orders}
           receipts={receipts}
           products={products}
@@ -473,8 +600,8 @@ export function App() {
           onOpenInvoice={openInvoice}
           onOpenSale={openSale}
           onOpenReceipt={openReceipt}
-          onOpenOrders={() => setActivePage("orders")}
-          onOpenProducts={() => setActivePage("products")}
+          onOpenOrders={() => navigate("orders")}
+          onOpenProducts={() => navigate("products")}
         />
       ) : null}
 
@@ -484,8 +611,8 @@ export function App() {
           sales={sales}
           celebrations={celebrations}
           orderReminders={orderReminders}
-          onCreateInvoice={() => setActivePage("create-invoice")}
-          onOpenOrders={() => setActivePage("orders")}
+          onCreateInvoice={() => navigate("create-invoice")}
+          onOpenOrders={() => navigate("orders")}
           onOpenCustomer={openCustomer}
         />
       ) : null}
@@ -494,7 +621,7 @@ export function App() {
         <Invoices
           invoices={invoices}
           onOpenInvoice={openInvoice}
-          onCreateInvoice={() => setActivePage("create-invoice")}
+          onCreateInvoice={() => navigate("create-invoice")}
         />
       ) : null}
 
@@ -512,10 +639,11 @@ export function App() {
           settings={settings}
           invoice={selectedInvoice}
           items={selectedInvoiceItems}
-          onBack={() => setActivePage("invoices")}
+          onBack={() => navigate("invoices")}
           onDelete={deleteInvoice}
           onRecordAsSale={recordInvoiceAsSale}
           onUpdated={refreshSelectedInvoice}
+          canManage={isAdmin}
         />
       ) : null}
 
@@ -523,7 +651,7 @@ export function App() {
         <Sales
           sales={sales}
           onOpenSale={openSale}
-          onAddSale={() => setActivePage("add-sale")}
+          onAddSale={() => navigate("add-sale")}
         />
       ) : null}
 
@@ -541,9 +669,10 @@ export function App() {
           settings={settings}
           sale={selectedSale}
           items={selectedSaleItems}
-          onBack={() => setActivePage("search")}
+          onBack={() => navigate("search")}
           onDelete={deleteSale}
           onUpdated={refreshSelectedSale}
+          canManage={isAdmin}
         />
       ) : null}
 
@@ -554,6 +683,7 @@ export function App() {
           sales={sales}
           onChanged={refreshData}
           onOpenCustomer={openCustomer}
+          canDelete={isAdmin}
         />
       ) : null}
 
@@ -565,8 +695,9 @@ export function App() {
           orders={orders}
           invoices={invoices}
           sales={sales}
-          onBack={() => setActivePage("customers")}
+          onBack={() => navigate("customers")}
           onChanged={refreshData}
+          canDelete={isAdmin}
         />
       ) : null}
 
@@ -576,6 +707,7 @@ export function App() {
           orders={orders}
           onChanged={refreshData}
           onOpenCustomer={openCustomer}
+          canDelete={isAdmin}
         />
       ) : null}
 
@@ -588,6 +720,7 @@ export function App() {
           receipts={receipts}
           onChanged={refreshData}
           onOpenReceipt={openReceipt}
+          canDelete={isAdmin}
         />
       ) : null}
 
@@ -595,7 +728,7 @@ export function App() {
         <ReceiptDetails
           settings={settings}
           receipt={selectedReceipt}
-          onBack={() => setActivePage("receipts")}
+          onBack={() => navigate("receipts")}
           onUpdated={refreshSelectedReceipt}
         />
       ) : null}
@@ -618,7 +751,10 @@ export function App() {
         <Settings settings={settings} onSettingsSaved={(savedSettings) => setSettings(savedSettings)} />
       ) : null}
 
+      {activePage === "manage-staff" ? <ManageStaff currentProfile={profile} /> : null}
+
       {activePage === "backup" ? <Backup onImported={refreshData} /> : null}
     </AppShell>
   );
 }
+

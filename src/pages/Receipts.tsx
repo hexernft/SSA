@@ -17,6 +17,7 @@ type ReceiptsProps = {
   receipts: Receipt[];
   onChanged: () => Promise<void>;
   onOpenReceipt: (receiptId: string) => void;
+  canDelete: boolean;
 };
 
 type ReceiptForm = {
@@ -55,6 +56,7 @@ export function Receipts({
   receipts,
   onChanged,
   onOpenReceipt,
+  canDelete,
 }: ReceiptsProps) {
   const [form, setForm] = useState<ReceiptForm>(emptyForm);
   const [search, setSearch] = useState("");
@@ -378,7 +380,9 @@ export function Receipts({
                   <td>
                     <div className="button-row">
                       <Button variant="secondary" onClick={() => onOpenReceipt(receipt.id)}>View</Button>
-                      <Button variant="danger" onClick={() => deleteReceipt(receipt.id)}>Delete</Button>
+                      {canDelete ? (
+                        <Button variant="danger" onClick={() => deleteReceipt(receipt.id)}>Delete</Button>
+                      ) : null}
                     </div>
                   </td>
                 </tr>

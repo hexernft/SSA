@@ -17,6 +17,7 @@ type InvoiceDetailsProps = {
   onDelete: (invoiceId: string) => Promise<void>;
   onRecordAsSale: (invoiceId: string) => Promise<void>;
   onUpdated: (invoiceId: string) => Promise<void>;
+  canManage: boolean;
 };
 
 export function InvoiceDetails({
@@ -27,6 +28,7 @@ export function InvoiceDetails({
   onDelete,
   onRecordAsSale,
   onUpdated,
+  canManage,
 }: InvoiceDetailsProps) {
   const invoiceRecord = invoice as Invoice;
   const [isEditing, setIsEditing] = useState(false);
@@ -404,25 +406,29 @@ export function InvoiceDetails({
         <div>
           <p className="eyebrow">Invoice Details</p>
           <h2>{invoiceRecord.invoiceNumber}</h2>
-          <p>View, print, save PDF, edit, record as sale, or delete this invoiceRecord.</p>
+          <p>View, print, or save this invoice as PDF. Admins can manage invoice details.</p>
         </div>
 
         <div className="button-row">
           <Button variant="secondary" onClick={onBack}>
             Back
           </Button>
-          <Button variant="secondary" onClick={() => setIsEditing(true)}>
-            Edit
-          </Button>
+          {canManage ? (
+            <Button variant="secondary" onClick={() => setIsEditing(true)}>
+              Edit
+            </Button>
+          ) : null}
           <Button onClick={() => window.print()}>Print / Save PDF</Button>
-          {!invoiceRecord.linkedSaleId ? (
+          {canManage && !invoiceRecord.linkedSaleId ? (
             <Button variant="secondary" onClick={() => onRecordAsSale(invoiceRecord.id)}>
               Record as Sale
             </Button>
           ) : null}
-          <Button variant="danger" onClick={() => onDelete(invoiceRecord.id)}>
-            Delete
-          </Button>
+          {canManage ? (
+            <Button variant="danger" onClick={() => onDelete(invoiceRecord.id)}>
+              Delete
+            </Button>
+          ) : null}
         </div>
       </div>
 

@@ -7,19 +7,19 @@ type ThemeToggleProps = {
 };
 
 export function ThemeToggle({ theme, onToggle }: ThemeToggleProps) {
-  const isLight = theme === "light";
+  const isDark = theme === "dark";
+  const Icon = isDark ? Sun : Moon;
+  const label = isDark ? "Switch to light mode" : "Switch to dark mode";
 
   return (
     <button
       type="button"
-      className="theme-toggle no-print"
+      className="theme-toggle icon-only"
       onClick={onToggle}
-      aria-label={`Switch to ${isLight ? "dark" : "light"} mode`}
+      aria-label={label}
+      title={label}
     >
-      <span className="theme-toggle-icon">
-        {isLight ? <Sun size={16} /> : <Moon size={16} />}
-      </span>
-      <span>{isLight ? "Light" : "Dark"}</span>
+      <Icon size={18} />
     </button>
   );
 }
