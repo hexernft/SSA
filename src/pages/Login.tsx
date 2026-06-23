@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { supabase } from "../lib/supabase";
+import { usernameToInternalEmail } from "../lib/staffProfiles";
 import logoLight from "../assets/logo-light.png";
 
 type LoginProps = {
@@ -7,7 +8,7 @@ type LoginProps = {
 };
 
 export function Login({ error = "" }: LoginProps) {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [localError, setLocalError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -17,13 +18,19 @@ export function Login({ error = "" }: LoginProps) {
     setLocalError("");
     setIsSubmitting(true);
 
-    const { error: signInError } = await supabase.auth.signInWithPassword({
-      email: email.trim(),
-      password,
-    });
+    try {
+      const email = usernameToInternalEmail(username);
 
-    if (signInError) {
-      setLocalError(signInError.message || "Unable to sign in. Check the email and password.");
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (signInError) {
+        setLocalError("Unable to sign in. Check the username and password.");
+      }
+    } catch (err) {
+      setLocalError(err instanceof Error ? err.message : "Unable to sign in.");
     }
 
     setIsSubmitting(false);
@@ -60,19 +67,19 @@ export function Login({ error = "" }: LoginProps) {
           <p className="eyebrow auth-eyebrow">Secure Staff Login</p>
           <h2>Welcome back</h2>
           <p className="auth-copy auth-copy-light">
-            Sign in to continue to the Sleek Stitch business dashboard.
+            Sign in with your staff username and password.
           </p>
 
           {displayError ? <div className="form-error auth-error-dark">{displayError}</div> : null}
 
           <label className="field field-dark">
-            <span>Email</span>
+            <span>Username</span>
             <input
-              type="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              placeholder="admin@sleekstitch.com"
-              autoComplete="email"
+              type="text"
+              value={username}
+              onChange={(event) => setUsername(event.target.value)}
+              placeholder="e.g. blessing"
+              autoComplete="username"
               required
             />
           </label>

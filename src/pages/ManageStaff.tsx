@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import type { StaffProfile, UserRole } from "../types";
 import {
-  addExistingAuthUserProfile,
+  createStaffLogin,
   listStaffProfiles,
   updateStaffProfile,
 } from "../lib/staffProfiles";
@@ -17,7 +17,8 @@ export function ManageStaff({ currentProfile }: ManageStaffProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-  const [newUserId, setNewUserId] = useState("");
+  const [newUsername, setNewUsername] = useState("");
+  const [newPassword, setNewPassword] = useState("");
   const [newFullName, setNewFullName] = useState("");
   const [newRole, setNewRole] = useState<UserRole>("staff");
 
@@ -29,7 +30,7 @@ export function ManageStaff({ currentProfile }: ManageStaffProps) {
       const data = await listStaffProfiles();
       setProfiles(data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Unable to load staff profiles.");
+      setError(err instanceof Error ? err.message : "Unable to load staff accounts.");
     } finally {
       setIsLoading(false);
     }
@@ -50,10 +51,10 @@ export function ManageStaff({ currentProfile }: ManageStaffProps) {
 
     try {
       await updateStaffProfile(id, updates);
-      setMessage("Staff profile updated.");
+      setMessage("Staff account updated.");
       await loadProfiles();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Unable to update staff profile.");
+      setError(err instanceof Error ? err.message : "Unable to update staff account.");
     }
   }
 
@@ -63,18 +64,21 @@ export function ManageStaff({ currentProfile }: ManageStaffProps) {
     setMessage("");
 
     try {
-      await addExistingAuthUserProfile({
-        id: newUserId.trim(),
-        fullName: newFullName.trim(),
+      await createStaffLogin({
+        username: newUsername,
+        password: newPassword,
+        fullName: newFullName,
         role: newRole,
       });
-      setMessage("Staff profile added. The user can now sign in if their Auth account exists.");
-      setNewUserId("");
+
+      setMessage("Staff login created. They can now sign in with their username and password.");
+      setNewUsername("");
+      setNewPassword("");
       setNewFullName("");
       setNewRole("staff");
       await loadProfiles();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Unable to add staff profile.");
+      setError(err instanceof Error ? err.message : "Unable to create staff login.");
     }
   }
 
@@ -84,7 +88,7 @@ export function ManageStaff({ currentProfile }: ManageStaffProps) {
         <div>
           <p className="eyebrow">Admin</p>
           <h2>Manage Staff</h2>
-          <p>Create staff profiles, activate or deactivate users, and control admin/staff access.</p>
+          <p>Create staff logins, activate or deactivate users, and control admin/staff access.</p>
         </div>
       </div>
 
@@ -93,29 +97,41 @@ export function ManageStaff({ currentProfile }: ManageStaffProps) {
 
       <div className="two-column-layout">
         <Card>
-          <h3>Add Staff Profile</h3>
+          <h3>Create Staff Login</h3>
           <p className="muted-copy">
-            First create the user in Supabase Authentication, then paste the Auth user ID here.
-            This keeps password handling secure and avoids exposing admin keys inside the app.
+            Generate a username and password for each staff member. No email is required.
           </p>
 
           <form onSubmit={addProfile} className="stacked-form">
-            <label className="field">
-              <span>Auth User ID</span>
-              <input
-                value={newUserId}
-                onChange={(event) => setNewUserId(event.target.value)}
-                placeholder="Paste Supabase Auth user ID"
-                required
-              />
-            </label>
-
             <label className="field">
               <span>Full Name</span>
               <input
                 value={newFullName}
                 onChange={(event) => setNewFullName(event.target.value)}
                 placeholder="Staff full name"
+                required
+              />
+            </label>
+
+            <label className="field">
+              <span>Username</span>
+              <input
+                value={newUsername}
+                onChange={(event) => setNewUsername(event.target.value)}
+                placeholder="e.g. blessing"
+                autoComplete="off"
+                required
+              />
+            </label>
+
+            <label className="field">
+              <span>Password</span>
+              <input
+                type="password"
+                value={newPassword}
+                onChange={(event) => setNewPassword(event.target.value)}
+                placeholder="Minimum 6 characters"
+                autoComplete="new-password"
                 required
               />
             </label>
@@ -128,22 +144,8 @@ export function ManageStaff({ currentProfile }: ManageStaffProps) {
               </select>
             </label>
 
-            <Button type="submit">Add Staff Profile</Button>
+            <Button type="submit">Create Staff Login</Button>
           </form>
-        </Card>
-
-        <Card>
-          <h3>Role Guide</h3>
-          <div className="role-guide">
-            <div>
-              <strong>Staff</strong>
-              <span>Can enter customers, invoices, jobs, and receipts. Delete and report access are hidden.</span>
-            </div>
-            <div>
-              <strong>Admin</strong>
-              <span>Can view reports, manage staff, edit invoice details, and delete records where necessary.</span>
-            </div>
-          </div>
         </Card>
       </div>
 
@@ -151,7 +153,7 @@ export function ManageStaff({ currentProfile }: ManageStaffProps) {
         <div className="section-heading">
           <div>
             <h3>Staff Accounts</h3>
-            <p>Only active approved profiles can use the app.</p>
+            <p>Only active approved staff accounts can use the app.</p>
           </div>
           <Button variant="secondary" onClick={loadProfiles}>Refresh</Button>
         </div>
@@ -159,7 +161,7 @@ export function ManageStaff({ currentProfile }: ManageStaffProps) {
         {isLoading ? <p>Loading staff...</p> : null}
 
         {!isLoading && profiles.length === 0 ? (
-          <div className="empty-state small">No staff profiles found.</div>
+          <div className="empty-state small">No staff accounts found.</div>
         ) : null}
 
         {!isLoading && profiles.length > 0 ? (
@@ -168,6 +170,7 @@ export function ManageStaff({ currentProfile }: ManageStaffProps) {
               <thead>
                 <tr>
                   <th>Name</th>
+                  <th>Username</th>
                   <th>Role</th>
                   <th>Status</th>
                   <th>Created</th>
@@ -179,8 +182,9 @@ export function ManageStaff({ currentProfile }: ManageStaffProps) {
                   <tr key={profile.id}>
                     <td>
                       <strong>{profile.fullName}</strong>
-                      <span className="table-subtext">{profile.id}</span>
+                      <span className="table-subtext">{profile.id === currentProfile.id ? "Current account" : "Staff account"}</span>
                     </td>
+                    <td>{profile.username || "—"}</td>
                     <td>
                       <select
                         value={profile.role}
@@ -220,3 +224,4 @@ export function ManageStaff({ currentProfile }: ManageStaffProps) {
     </div>
   );
 }
+

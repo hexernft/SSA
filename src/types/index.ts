@@ -32,6 +32,7 @@ export type UserRole = "admin" | "staff";
 export type StaffProfile = {
   id: string;
   fullName: string;
+  username: string;
   role: UserRole;
   isActive: boolean;
   createdAt: string;
@@ -333,3 +334,4 @@ export type SaleFormState = {
   note: string;
   items: DraftItem[];
 };
+
