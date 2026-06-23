@@ -1,0 +1,40 @@
+SLEEK STITCH ATELIER BUSINESS APP
+Client Setup Instructions
+
+IMPORTANT:
+Do not open index.html directly.
+Use start-app.bat to run the app.
+
+FIRST-TIME SETUP
+1. Install Node.js LTS from https://nodejs.org/
+2. Copy this app folder to a simple location, for example:
+   C:\Sleek-Stitch-App
+3. Double-click:
+   start-app.bat
+
+The first run may take a few minutes because it installs app dependencies.
+
+DAILY USE
+1. Double-click:
+   start-app.bat
+2. The app should open in your browser at:
+   http://localhost:5173/
+3. Keep the black command window open while using the app.
+4. Close the command window when finished.
+
+INSTALL AS DESKTOP APP
+After opening the app in Chrome or Edge:
+1. Open the browser menu
+2. Choose Install app or Add to desktop
+3. You can then launch it like a normal desktop app
+
+DATA AND BACKUPS
+All records are stored locally on this computer/browser.
+
+Use:
+Backup > Export Backup
+
+Recommended:
+Export a backup at the end of every business day.
+
+If browser data is cleared or the computer is changed, records can be lost unless you have exported backups.
