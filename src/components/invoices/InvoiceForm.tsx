@@ -24,6 +24,8 @@ type InvoiceFormProps = {
 };
 
 export function InvoiceForm({ settings, customers, products, onSave }: InvoiceFormProps) {
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveError, setSaveError] = useState("");
   const [form, setForm] = useState<InvoiceFormState>(() => ({
     customerId: "",
     customerName: "",
@@ -146,7 +148,19 @@ export function InvoiceForm({ settings, customers, products, onSave }: InvoiceFo
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    await onSave({ ...form, status: totals.status });
+    if (isSaving) return;
+
+    setSaveError("");
+    setIsSaving(true);
+
+    try {
+      await onSave({ ...form, status: totals.status });
+    } catch (error) {
+      console.error("Unable to save invoice", error);
+      setSaveError("Invoice could not be saved. Please check the details and try again.");
+    } finally {
+      setIsSaving(false);
+    }
   }
 
   return (
@@ -156,8 +170,12 @@ export function InvoiceForm({ settings, customers, products, onSave }: InvoiceFo
           title="Create Invoice"
           subtitle="Generate a formal Sleek Stitch Atelier invoice. Select saved customers and services to work faster."
         />
-        <Button type="submit">Save Invoice</Button>
+        <Button type="submit" disabled={isSaving}>
+          {isSaving ? "Saving..." : "Save Invoice"}
+        </Button>
       </div>
+
+      {saveError ? <div className="form-error">{saveError}</div> : null}
 
       <div className="form-grid">
         <Card>

@@ -1,5 +1,5 @@
 import type { CelebrationReminder, Invoice, OrderReminder, Sale } from "../types";
-import { FilePlus2, ShoppingBag } from "lucide-react";
+import { FilePlus2 } from "lucide-react";
 import { isSameMonth, isToday } from "../lib/dates";
 import { formatMoney } from "../lib/money";
 import { formatOrderDueText } from "../lib/orderReminders";
@@ -15,8 +15,6 @@ type DashboardProps = {
   celebrations: CelebrationReminder[];
   orderReminders: OrderReminder[];
   onCreateInvoice: () => void;
-  onAddSale: () => void;
-  onOpenSales: () => void;
   onOpenOrders: () => void;
   onOpenCustomer: (customerId: string) => void;
 };
@@ -27,8 +25,6 @@ export function Dashboard({
   celebrations,
   orderReminders,
   onCreateInvoice,
-  onAddSale,
-  onOpenSales,
   onOpenOrders,
   onOpenCustomer,
 }: DashboardProps) {
@@ -52,11 +48,10 @@ export function Dashboard({
       <div className="page-header">
         <BrandHeader
           title="Command Center"
-          subtitle="A clear view of sales, cash received, balances, jobs due soon, and customer moments that need attention."
+          subtitle="A clear view of invoices, cash received, balances, jobs due soon, and customer moments that need attention."
         />
         <div className="button-row">
           <Button onClick={onCreateInvoice}><FilePlus2 size={16} /> Create Invoice</Button>
-          <Button variant="secondary" onClick={onAddSale}><ShoppingBag size={16} /> Add Sale</Button>
         </div>
       </div>
 
@@ -64,9 +59,9 @@ export function Dashboard({
 
       <div className="stats-grid mt">
         <Card className="metric-card metric-card-primary">
-          <span className="stat-label">Sales Booked</span>
+          <span className="stat-label">Revenue Booked</span>
           <strong className="stat-value">{formatMoney(totalSales, currency)}</strong>
-          <span className="stat-caption">All recorded sales value</span>
+          <span className="stat-caption">Paid invoice and revenue value</span>
         </Card>
         <Card className="metric-card">
           <span className="stat-label">Cash Received</span>
@@ -81,12 +76,12 @@ export function Dashboard({
         <Card className="metric-card">
           <span className="stat-label">Today</span>
           <strong className="stat-value">{formatMoney(todaySales, currency)}</strong>
-          <span className="stat-caption">Sales logged today</span>
+          <span className="stat-caption">Revenue logged today</span>
         </Card>
         <Card className="metric-card">
           <span className="stat-label">This Month</span>
           <strong className="stat-value">{formatMoney(monthSales, currency)}</strong>
-          <span className="stat-caption">Month-to-date sales</span>
+          <span className="stat-caption">Month-to-date revenue</span>
         </Card>
         <Card className="metric-card">
           <span className="stat-label">Invoices</span>
@@ -112,7 +107,7 @@ export function Dashboard({
               <span className="section-kicker">Production</span>
               <h3>Jobs Needing Attention</h3>
             </div>
-            <Button variant="secondary" onClick={onOpenOrders}>View Orders</Button>
+            <Button variant="secondary" onClick={onOpenOrders}>View Jobs</Button>
           </div>
 
           {orderReminders.length ? (
@@ -169,9 +164,8 @@ export function Dashboard({
         <div className="section-head">
           <div>
             <span className="section-kicker">Latest Activity</span>
-            <h3>Recent Sales</h3>
+            <h3>Recent Revenue Activity</h3>
           </div>
-          <Button variant="secondary" onClick={onOpenSales}>View Sales</Button>
         </div>
 
         {recentSales.length ? (
@@ -190,7 +184,7 @@ export function Dashboard({
             ))}
           </div>
         ) : (
-          <div className="empty-state small"><p>No sales records yet. Add a direct sale or record a paid invoice.</p></div>
+          <div className="empty-state small"><p>No revenue records yet. Create an invoice and record payment to see activity here.</p></div>
         )}
       </Card>
     </div>

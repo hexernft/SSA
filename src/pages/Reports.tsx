@@ -88,9 +88,9 @@ export function Reports({ customers, invoices, sales, orders, receipts }: Report
     downloadCsv(
       `sleek-stitch-report-${new Date().toISOString().slice(0, 10)}.csv`,
       [
-        { metric: "Total Sales", value: totalSales },
+        { metric: "Total Revenue", value: totalSales },
         { metric: "Total Paid", value: totalPaid },
-        { metric: "Outstanding Sales Balance", value: totalOutstanding },
+        { metric: "Outstanding Revenue Balance", value: totalOutstanding },
         { metric: "Receipt Total", value: receiptTotal },
         { metric: "Order Value", value: orderValue },
         { metric: "Order Balance", value: orderBalance },
@@ -126,9 +126,9 @@ export function Reports({ customers, invoices, sales, orders, receipts }: Report
       </Card>
 
       <div className="stats-grid mt">
-        <Card><span className="stat-label">Sales Value</span><strong className="stat-value">{formatMoney(totalSales, "₦")}</strong></Card>
-        <Card><span className="stat-label">Paid Sales</span><strong className="stat-value">{formatMoney(totalPaid, "₦")}</strong></Card>
-        <Card><span className="stat-label">Sales Balance</span><strong className="stat-value">{formatMoney(totalOutstanding, "₦")}</strong></Card>
+        <Card><span className="stat-label">Revenue Value</span><strong className="stat-value">{formatMoney(totalSales, "₦")}</strong></Card>
+        <Card><span className="stat-label">Paid Revenue</span><strong className="stat-value">{formatMoney(totalPaid, "₦")}</strong></Card>
+        <Card><span className="stat-label">Revenue Balance</span><strong className="stat-value">{formatMoney(totalOutstanding, "₦")}</strong></Card>
         <Card><span className="stat-label">Receipt Total</span><strong className="stat-value">{formatMoney(receiptTotal, "₦")}</strong></Card>
         <Card><span className="stat-label">Order Value</span><strong className="stat-value">{formatMoney(orderValue, "₦")}</strong></Card>
         <Card><span className="stat-label">Order Balance</span><strong className="stat-value">{formatMoney(orderBalance, "₦")}</strong></Card>

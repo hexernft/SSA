@@ -66,5 +66,7 @@
       "createStartMenuShortcut": true,
       "shortcutName": "Sleek Stitch Atelier"
     }
-  }
+  },
+  "description": "Offline invoice, jobs, receipts, customer, and revenue management app for Sleek Stitch Atelier.",
+  "author": "Sleek Stitch Atelier"
 }

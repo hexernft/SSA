@@ -19,7 +19,7 @@ export function SalePreview({ settings, sale, items }: SalePreviewProps) {
 
         <div className="invoice-preview-header">
           <div>
-            <p className="eyebrow">Sales Record</p>
+            <p className="eyebrow">Revenue Record</p>
             <h1>{sale.saleNumber}</h1>
             <span className={`status ${sale.status}`}>{sale.status.replace("_", " ")}</span>
           </div>
@@ -37,7 +37,7 @@ export function SalePreview({ settings, sale, items }: SalePreviewProps) {
           </div>
 
           <div>
-            <span>Sale Date</span>
+            <span>Record Date</span>
             <strong>{formatDate(sale.saleDate)}</strong>
           </div>
 

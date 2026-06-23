@@ -1898,3 +1898,14 @@ html[data-theme="light"] .metric-card-primary {
     linear-gradient(135deg, rgba(156, 109, 61, 0.13), transparent 54%),
     var(--panel);
 }
+
+.form-error {
+  margin: 0 0 18px;
+  border: 1px solid rgba(220, 38, 38, 0.28);
+  border-radius: 14px;
+  background: rgba(220, 38, 38, 0.08);
+  color: #dc2626;
+  padding: 12px 14px;
+  font-size: 13px;
+  font-weight: 600;
+}

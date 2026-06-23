@@ -145,7 +145,7 @@ export function Orders({ customers, orders, onChanged, onOpenCustomer }: OrdersP
     <div>
       <div className="page-header">
         <BrandHeader
-          title="Orders / Jobs"
+          title="Jobs"
           subtitle="Track tailoring jobs from measurement to delivery."
         />
       </div>

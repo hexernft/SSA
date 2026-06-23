@@ -345,8 +345,8 @@ export function Customers({ customers, invoices, sales, onChanged, onOpenCustome
               <th>Birthday</th>
               <th>Anniversary</th>
               <th>Invoices</th>
-              <th>Sales</th>
-              <th>Total Sales</th>
+              <th>Revenue Records</th>
+              <th>Total Revenue</th>
               <th>Balance</th>
               <th></th>
             </tr>

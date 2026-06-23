@@ -68,12 +68,12 @@ export function SaleDetails({
       <div>
         <div className="page-header">
           <div>
-            <p className="eyebrow">Sale</p>
-            <h2>Sale not found</h2>
+            <p className="eyebrow">Revenue Record</p>
+            <h2>Revenue record not found</h2>
           </div>
 
           <Button variant="secondary" onClick={onBack}>
-            Back to Sales
+            Back
           </Button>
         </div>
       </div>
@@ -217,9 +217,9 @@ export function SaleDetails({
       <form onSubmit={saveChanges}>
         <div className="page-header">
           <div>
-            <p className="eyebrow">Edit Sale</p>
+            <p className="eyebrow">Edit Revenue Record</p>
             <h2>{saleRecord.saleNumber}</h2>
-            <p>Update customer details, payment details, status, and sale items.</p>
+            <p>Update customer details, payment details, status, and revenue items.</p>
           </div>
 
           <div className="button-row">
@@ -270,11 +270,11 @@ export function SaleDetails({
           </Card>
 
           <Card>
-            <h3>Sale Details</h3>
+            <h3>Revenue Details</h3>
 
             <div className="two-grid">
               <label className="field">
-                <span>Sale Date</span>
+                <span>Record Date</span>
                 <input
                   type="date"
                   value={form.saleDate}
@@ -359,7 +359,7 @@ export function SaleDetails({
             <h3>Note</h3>
 
             <label className="field">
-              <span>Sale Note</span>
+              <span>Record Note</span>
               <textarea
                 value={form.note}
                 onChange={(event) => updateField("note", event.target.value)}
@@ -386,9 +386,9 @@ export function SaleDetails({
     <div>
       <div className="page-header no-print">
         <div>
-          <p className="eyebrow">Sale Details</p>
+          <p className="eyebrow">Revenue Record</p>
           <h2>{saleRecord.saleNumber}</h2>
-          <p>View, print, edit, or delete this sales record.</p>
+          <p>View, print, edit, or delete this revenue record.</p>
         </div>
 
         <div className="button-row">

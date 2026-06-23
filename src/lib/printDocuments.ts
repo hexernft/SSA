@@ -431,7 +431,7 @@ export function printCustomerProfile(
         <div class="box"><span class="label">Preferred Style</span><span class="value">${escapeHtml(customer.preferredStyle || "—")}</span></div>
         <div class="box"><span class="label">Preferred Color</span><span class="value">${escapeHtml(customer.preferredColor || "—")}</span></div>
         <div class="box"><span class="label">Preferred Fabric</span><span class="value">${escapeHtml(customer.preferredFabric || "—")}</span></div>
-        <div class="box"><span class="label">Total Sales</span><span class="value">${escapeHtml(formatMoney(totalSales, "₦"))}</span></div>
+        <div class="box"><span class="label">Total Revenue</span><span class="value">${escapeHtml(formatMoney(totalSales, "₦"))}</span></div>
         <div class="box"><span class="label">Outstanding</span><span class="value">${escapeHtml(formatMoney(outstanding, "₦"))}</span></div>
       </div>
 
@@ -477,10 +477,10 @@ export function printCustomerProfile(
       </div>
 
       <div class="section">
-        <h3>Invoice / Sales Summary</h3>
+        <h3>Invoice / Revenue Summary</h3>
         <div class="grid">
           <div class="box"><span class="label">Invoices</span><span class="value">${escapeHtml(invoices.length)}</span></div>
-          <div class="box"><span class="label">Sales Records</span><span class="value">${escapeHtml(sales.length)}</span></div>
+          <div class="box"><span class="label">Revenue Records</span><span class="value">${escapeHtml(sales.length)}</span></div>
         </div>
       </div>
     `

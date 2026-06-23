@@ -65,9 +65,9 @@ function resultTypeLabel(type: SearchResult["type"]) {
     case "invoices":
       return "Invoice";
     case "sales":
-      return "Sale";
+      return "Revenue Record";
     case "orders":
-      return "Order / Job";
+      return "Job";
     case "receipts":
       return "Receipt";
     case "products":
@@ -198,7 +198,7 @@ export function Search({
             subtitle: `${sale.customerName || "Customer"} · ${sale.status.replace("_", " ")}`,
             meta: `${formatDate(sale.saleDate)} · ${sale.paymentMethod} · ${sale.source}`,
             amount: formatMoney(sale.grandTotal, sale.currency),
-            actionLabel: "Open Sale",
+            actionLabel: "Open Record",
             onOpen: () => void onOpenSale(sale.id),
           });
         }
@@ -386,7 +386,7 @@ export function Search({
       <div className="page-header">
         <BrandHeader
           title="Global Search"
-          subtitle="Find customers, invoices, sales, receipts, orders, measurements, dates, and services from one place."
+          subtitle="Find customers, invoices, receipts, jobs, measurements, dates, and services from one place."
         />
       </div>
 
@@ -408,8 +408,8 @@ export function Search({
               <option value="all">All records</option>
               <option value="customers">Customers</option>
               <option value="invoices">Invoices</option>
-              <option value="sales">Sales</option>
-              <option value="orders">Orders / Jobs</option>
+              <option value="sales">Revenue Records</option>
+              <option value="orders">Jobs</option>
               <option value="receipts">Receipts</option>
               <option value="products">Products / Services</option>
               <option value="measurements">Measurements</option>

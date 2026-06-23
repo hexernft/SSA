@@ -170,11 +170,11 @@ export function App() {
   async function createSaleFromInvoice(
     invoice: Invoice,
     invoiceItems: InvoiceItem[],
-    paymentMethod: Sale["paymentMethod"]
+    paymentMethod: Sale["paymentMethod"],
+    saleNumber: string
   ) {
     const now = new Date().toISOString();
     const saleId = createId("sale");
-    const saleNumber = await getNextSaleNumber();
     const saleStatus = getSaleStatus("unpaid", invoice.amountPaid, invoice.balanceDue);
 
     const sale: Sale = {
@@ -227,6 +227,8 @@ export function App() {
     const status = getInvoiceStatus(form.status, form.dueDate, totals.amountPaid, totals.balanceDue);
 
     let linkedSaleId: string | undefined;
+    const shouldCreateLinkedSale = totals.amountPaid > 0 || status === "paid" || status === "part_paid";
+    const linkedSaleNumber = shouldCreateLinkedSale ? await getNextSaleNumber() : undefined;
 
     const invoice: Invoice = {
       id: invoiceId,
@@ -268,8 +270,8 @@ export function App() {
       await db.invoices.add(invoice);
       await db.invoiceItems.bulkAdd(invoiceItems);
 
-      if (totals.amountPaid > 0 || status === "paid" || status === "part_paid") {
-        linkedSaleId = await createSaleFromInvoice(invoice, invoiceItems, form.paymentMethod);
+      if (shouldCreateLinkedSale && linkedSaleNumber) {
+        linkedSaleId = await createSaleFromInvoice(invoice, invoiceItems, form.paymentMethod, linkedSaleNumber);
         await db.invoices.update(invoiceId, { linkedSaleId });
       }
 
@@ -301,8 +303,10 @@ export function App() {
       return;
     }
 
+    const saleNumber = await getNextSaleNumber();
+
     await db.transaction("rw", db.invoices, db.sales, db.saleItems, async () => {
-      const saleId = await createSaleFromInvoice(fullInvoice.invoice, fullInvoice.items, "transfer");
+      const saleId = await createSaleFromInvoice(fullInvoice.invoice, fullInvoice.items, "transfer", saleNumber);
       await db.invoices.update(invoiceId, {
         linkedSaleId: saleId,
         updatedAt: new Date().toISOString(),
@@ -446,7 +450,7 @@ export function App() {
     setSelectedSale(null);
     setSelectedSaleItems([]);
     await refreshData();
-    setActivePage("sales");
+    setActivePage("search");
   }
 
   if (isLoading) {
@@ -481,8 +485,6 @@ export function App() {
           celebrations={celebrations}
           orderReminders={orderReminders}
           onCreateInvoice={() => setActivePage("create-invoice")}
-          onAddSale={() => setActivePage("add-sale")}
-          onOpenSales={() => setActivePage("sales")}
           onOpenOrders={() => setActivePage("orders")}
           onOpenCustomer={openCustomer}
         />
@@ -539,7 +541,7 @@ export function App() {
           settings={settings}
           sale={selectedSale}
           items={selectedSaleItems}
-          onBack={() => setActivePage("sales")}
+          onBack={() => setActivePage("search")}
           onDelete={deleteSale}
           onUpdated={refreshSelectedSale}
         />

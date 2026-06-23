@@ -389,7 +389,7 @@ export function CustomerDetails({
 
       <div className="stats-grid">
         <Card>
-          <span className="stat-label">Total Sales</span>
+          <span className="stat-label">Total Revenue</span>
           <strong className="stat-value">{formatMoney(totalSales, currency)}</strong>
         </Card>
         <Card>
@@ -639,7 +639,7 @@ export function CustomerDetails({
         </Card>
 
         <Card>
-          <h3>Sales History</h3>
+          <h3>Revenue History</h3>
           {customerSales.length ? (
             <div className="mini-list">
               {customerSales.map((sale) => (
