@@ -6,7 +6,6 @@ import { formatReminderTime } from "../lib/reminders";
 import { Card } from "../components/ui/Card";
 import { Button } from "../components/ui/Button";
 import { BrandHeader } from "../components/shared/BrandHeader";
-import { InstallAppCard } from "../components/shared/InstallAppCard";
 
 type DashboardProps = {
   invoices: Invoice[];
@@ -49,8 +48,6 @@ export function Dashboard({
           subtitle="A clear view of invoices, cash received, balances, jobs due soon, and customer moments that need attention."
         />
       </div>
-
-      <InstallAppCard />
 
       <div className="stats-grid mt">
         <Card className="metric-card metric-card-primary">
@@ -185,4 +182,5 @@ export function Dashboard({
     </div>
   );
 }
+
 
