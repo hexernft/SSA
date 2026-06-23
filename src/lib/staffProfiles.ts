@@ -101,40 +101,22 @@ export async function createStaffLogin(input: {
     throw new Error("Enter the staff full name.");
   }
 
-  const email = usernameToInternalEmail(username);
-
-  const { data: existingProfiles, error: existingError } = await supabase
-    .from("profiles")
-    .select("id")
-    .eq("username", username)
-    .limit(1);
-
-  if (existingError) throw existingError;
-
-  if (existingProfiles && existingProfiles.length > 0) {
-    throw new Error("That username already exists.");
-  }
-
-  const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-    email,
-    password: input.password,
+  const { data, error } = await supabase.functions.invoke("create-staff-login", {
+    body: {
+      username,
+      password: input.password,
+      fullName: input.fullName.trim(),
+      role: input.role,
+    },
   });
 
-  if (signUpError) throw signUpError;
-
-  const userId = signUpData.user?.id;
-
-  if (!userId) {
-    throw new Error("Staff login was not created. Check Supabase email confirmation settings.");
+  if (error) {
+    throw new Error(error.message || "Unable to create staff login.");
   }
 
-  const { error: profileError } = await supabase.from("profiles").insert({
-    id: userId,
-    full_name: input.fullName.trim(),
-    username,
-    role: input.role,
-    is_active: true,
-  });
+  if (data?.error) {
+    throw new Error(data.error);
+  }
 
-  if (profileError) throw profileError;
+  return data;
 }

@@ -130,7 +130,7 @@ export function App() {
       if (!loadedProfile) {
         setProfile(null);
         setAuthError(
-          "This account signed in successfully, but no staff profile was found. Please ask an admin to add this user in Supabase profiles."
+          "This account signed in successfully, but staff access has not been activated. Please ask an admin to enable access."
         );
         await supabase.auth.signOut();
         return;
@@ -757,4 +757,5 @@ export function App() {
     </AppShell>
   );
 }
+
 
