@@ -2369,3 +2369,36 @@ html[data-theme="light"] .auth-page {
 .theme-toggle.icon-only span {
   display: none !important;
 }
+
+/* Dashboard/homepage logo neon breathing effect only */
+.brand-header-logo {
+  filter:
+    drop-shadow(0 0 5px rgba(255, 255, 255, 0.28))
+    drop-shadow(0 0 14px rgba(212, 162, 76, 0.22));
+  animation: sleekDashboardLogoBreath 3.8s ease-in-out infinite;
+  will-change: filter, transform;
+}
+
+@keyframes sleekDashboardLogoBreath {
+  0%,
+  100% {
+    filter:
+      drop-shadow(0 0 4px rgba(255, 255, 255, 0.18))
+      drop-shadow(0 0 10px rgba(212, 162, 76, 0.14));
+    transform: scale(1);
+  }
+
+  50% {
+    filter:
+      drop-shadow(0 0 10px rgba(255, 255, 255, 0.52))
+      drop-shadow(0 0 24px rgba(212, 162, 76, 0.38))
+      drop-shadow(0 0 42px rgba(255, 255, 255, 0.12));
+    transform: scale(1.016);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-header-logo {
+    animation: none;
+  }
+}

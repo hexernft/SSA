@@ -10,6 +10,7 @@ import {
   getSettings,
 } from "../db/database";
 import { calculateTotals, getInvoiceStatus, getSaleStatus } from "../lib/calculations";
+import { listCustomers } from "../lib/customerStore";
 import { createId } from "../lib/ids";
 import { getUpcomingOrders } from "../lib/orderReminders";
 import { getUpcomingCelebrations } from "../lib/reminders";
@@ -211,7 +212,7 @@ export function App() {
       loadedSales,
     ] = await Promise.all([
       getSettings(),
-      db.customers.orderBy("createdAt").reverse().toArray(),
+      listCustomers(),
       db.customerSpecialDates.orderBy("createdAt").reverse().toArray(),
       db.products.orderBy("createdAt").reverse().toArray(),
       db.measurements.orderBy("createdAt").reverse().toArray(),
@@ -757,5 +758,6 @@ export function App() {
     </AppShell>
   );
 }
+
 
 

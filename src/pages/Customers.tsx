@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import type { Customer, Invoice, Sale } from "../types";
 import { db } from "../db/database";
+import { deleteCustomerRecord, saveCustomerRecord, updateCustomerRecord } from "../lib/customerStore";
 import { createId } from "../lib/ids";
 import { formatDate } from "../lib/dates";
 import { formatMoney } from "../lib/money";
@@ -100,7 +101,7 @@ export function Customers({ customers, invoices, sales, onChanged, onOpenCustome
     const now = new Date().toISOString();
 
     if (form.id) {
-      await db.customers.update(form.id, {
+      await updateCustomerRecord(form.id, {
         name: form.name,
         phone: form.phone,
         email: form.email,
@@ -116,7 +117,7 @@ export function Customers({ customers, invoices, sales, onChanged, onOpenCustome
         updatedAt: now,
       });
     } else {
-      await db.customers.add({
+      await saveCustomerRecord({
         id: createId("customer"),
         name: form.name,
         phone: form.phone,
@@ -140,13 +141,11 @@ export function Customers({ customers, invoices, sales, onChanged, onOpenCustome
   }
 
   async function deleteCustomer(customerId: string) {
-    const confirmed = window.confirm("Delete this customer from this device?");
+    const confirmed = window.confirm("Delete this customer?");
     if (!confirmed) return;
 
-    await db.transaction("rw", db.customers, db.customerSpecialDates, async () => {
-      await db.customers.delete(customerId);
-      await db.customerSpecialDates.where("customerId").equals(customerId).delete();
-    });
+    await deleteCustomerRecord(customerId);
+    await db.customerSpecialDates.where("customerId").equals(customerId).delete();
 
     await onChanged();
 
@@ -407,3 +406,5 @@ export function Customers({ customers, invoices, sales, onChanged, onOpenCustome
     </div>
   );
 }
+
+
