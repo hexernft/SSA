@@ -23,8 +23,8 @@ type OrderForm = {
   orderDate: string;
   dueDate: string;
   status: OrderStatus;
-  totalAmount: number;
-  depositPaid: number;
+  totalAmount: number | "";
+  depositPaid: number | "";
   notes: string;
 };
 
@@ -196,7 +196,6 @@ export function Orders({ customers, orders, onChanged, onOpenCustomer, canDelete
               <input
                 value={form.outfitType}
                 onChange={(event) => updateField("outfitType", event.target.value)}
-                placeholder="Sleek Executive, Agbada, alteration..."
                 required
               />
             </label>
@@ -244,7 +243,7 @@ export function Orders({ customers, orders, onChanged, onOpenCustomer, canDelete
                 <input
                   type="number"
                   value={form.totalAmount}
-                  onChange={(event) => updateField("totalAmount", Number(event.target.value || 0))}
+                  onChange={(event) => updateField("totalAmount", event.target.value === "" ? "" : Number(event.target.value))}
                 />
               </label>
 
@@ -253,7 +252,7 @@ export function Orders({ customers, orders, onChanged, onOpenCustomer, canDelete
                 <input
                   type="number"
                   value={form.depositPaid}
-                  onChange={(event) => updateField("depositPaid", Number(event.target.value || 0))}
+                  onChange={(event) => updateField("depositPaid", event.target.value === "" ? "" : Number(event.target.value))}
                 />
               </label>
 
@@ -271,7 +270,6 @@ export function Orders({ customers, orders, onChanged, onOpenCustomer, canDelete
               <textarea
                 value={form.notes}
                 onChange={(event) => updateField("notes", event.target.value)}
-                placeholder="Fabric, fitting, delivery, customer request..."
               />
             </label>
 
@@ -294,7 +292,6 @@ export function Orders({ customers, orders, onChanged, onOpenCustomer, canDelete
             <input
               value={search}
               onChange={(event) => setSearch(event.target.value)}
-              placeholder="Search customer, order number, outfit..."
             />
           </label>
 

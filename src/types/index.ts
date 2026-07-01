@@ -28,6 +28,7 @@ export type SaleSource = "invoice" | "direct";
 export type PaymentMethod = "cash" | "transfer" | "pos" | "card" | "other";
 export type SpecialDateType = "birthday" | "anniversary" | "special";
 export type UserRole = "admin" | "staff";
+export type NumericInputValue = number | "";
 
 export type StaffProfile = {
   id: string;
@@ -296,10 +297,10 @@ export type DraftItem = {
   id: string;
   productId?: string;
   description: string;
-  quantity: number;
-  unitPrice: number;
-  discount: number;
-  taxRate: number;
+  quantity: NumericInputValue;
+  unitPrice: NumericInputValue;
+  discount: NumericInputValue;
+  taxRate: NumericInputValue;
 };
 
 export type InvoiceFormState = {
@@ -312,8 +313,8 @@ export type InvoiceFormState = {
   dueDate: string;
   status: InvoiceStatus;
   currency: string;
-  deliveryFee: number;
-  amountPaid: number;
+  deliveryFee: NumericInputValue;
+  amountPaid: NumericInputValue;
   paymentMethod: PaymentMethod;
   notes: string;
   terms: string;
@@ -329,8 +330,8 @@ export type SaleFormState = {
   saleDate: string;
   status: SaleStatus;
   currency: string;
-  deliveryFee: number;
-  amountPaid: number;
+  deliveryFee: NumericInputValue;
+  amountPaid: NumericInputValue;
   paymentMethod: PaymentMethod;
   note: string;
   items: DraftItem[];

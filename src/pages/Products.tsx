@@ -17,7 +17,7 @@ type ProductForm = {
   name: string;
   category: string;
   description: string;
-  defaultPrice: number;
+  defaultPrice: number | "";
   taxable: boolean;
 };
 
@@ -123,7 +123,6 @@ export function Products({ products, onChanged }: ProductsProps) {
               <input
                 value={form.name}
                 onChange={(event) => updateField("name", event.target.value)}
-                placeholder="Sleek Executive, Agbada, Alteration..."
                 required
               />
             </label>
@@ -134,7 +133,6 @@ export function Products({ products, onChanged }: ProductsProps) {
                 <input
                   value={form.category}
                   onChange={(event) => updateField("category", event.target.value)}
-                  placeholder="Outfit, Service, Delivery..."
                 />
               </label>
 
@@ -143,8 +141,7 @@ export function Products({ products, onChanged }: ProductsProps) {
                 <input
                   type="number"
                   value={form.defaultPrice}
-                  onChange={(event) => updateField("defaultPrice", Number(event.target.value || 0))}
-                  placeholder="0"
+                  onChange={(event) => updateField("defaultPrice", event.target.value === "" ? "" : Number(event.target.value))}
                 />
               </label>
             </div>
@@ -154,7 +151,6 @@ export function Products({ products, onChanged }: ProductsProps) {
               <textarea
                 value={form.description}
                 onChange={(event) => updateField("description", event.target.value)}
-                placeholder="Short description used in invoices/sales"
               />
             </label>
 
@@ -186,7 +182,6 @@ export function Products({ products, onChanged }: ProductsProps) {
             <input
               value={search}
               onChange={(event) => setSearch(event.target.value)}
-              placeholder="Search by name, category, description"
             />
           </label>
 

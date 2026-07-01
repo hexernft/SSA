@@ -87,7 +87,6 @@ export function LineItemsEditor({
                   <input
                     value={item.description}
                     onChange={(event) => onUpdateItem(item.id, "description", event.target.value)}
-                    placeholder="Item or service"
                     required
                   />
                 </td>

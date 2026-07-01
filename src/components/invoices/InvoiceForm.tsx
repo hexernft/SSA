@@ -63,7 +63,7 @@ export function InvoiceForm({ settings, customers, products, onSave }: InvoiceFo
       terms: current.terms || settings.defaultTerms || "",
       items: current.items.map((item) => ({
         ...item,
-        taxRate: item.taxRate || settings.defaultTaxRate || 0,
+        taxRate: item.taxRate === "" ? "" : item.taxRate || settings.defaultTaxRate || 0,
       })),
     }));
   }, [settings]);
@@ -114,7 +114,7 @@ export function InvoiceForm({ settings, customers, products, onSave }: InvoiceFo
         item.id === itemId
           ? {
               ...item,
-              [key]: key === "productId" || key === "description" ? value : Number(value || 0),
+              [key]: key === "productId" || key === "description" ? value : value === "" ? "" : Number(value),
             }
           : item
       ),
@@ -198,7 +198,6 @@ export function InvoiceForm({ settings, customers, products, onSave }: InvoiceFo
             <input
               value={form.customerName}
               onChange={(event) => updateField("customerName", event.target.value)}
-              placeholder="Customer name"
               required
             />
           </label>
@@ -209,7 +208,6 @@ export function InvoiceForm({ settings, customers, products, onSave }: InvoiceFo
               <input
                 value={form.customerPhone}
                 onChange={(event) => updateField("customerPhone", event.target.value)}
-                placeholder="+234..."
               />
             </label>
             <label className="field">
@@ -217,7 +215,6 @@ export function InvoiceForm({ settings, customers, products, onSave }: InvoiceFo
               <input
                 value={form.customerEmail}
                 onChange={(event) => updateField("customerEmail", event.target.value)}
-                placeholder="customer@example.com"
               />
             </label>
           </div>
@@ -227,7 +224,6 @@ export function InvoiceForm({ settings, customers, products, onSave }: InvoiceFo
             <textarea
               value={form.customerAddress}
               onChange={(event) => updateField("customerAddress", event.target.value)}
-              placeholder="Customer address"
             />
           </label>
         </Card>
@@ -288,7 +284,7 @@ export function InvoiceForm({ settings, customers, products, onSave }: InvoiceFo
               <input
                 type="number"
                 value={form.deliveryFee}
-                onChange={(event) => updateField("deliveryFee", Number(event.target.value || 0))}
+                onChange={(event) => updateField("deliveryFee", event.target.value === "" ? "" : Number(event.target.value))}
               />
             </label>
 
@@ -297,7 +293,7 @@ export function InvoiceForm({ settings, customers, products, onSave }: InvoiceFo
               <input
                 type="number"
                 value={form.amountPaid}
-                onChange={(event) => updateField("amountPaid", Number(event.target.value || 0))}
+                onChange={(event) => updateField("amountPaid", event.target.value === "" ? "" : Number(event.target.value))}
               />
             </label>
 
@@ -337,7 +333,6 @@ export function InvoiceForm({ settings, customers, products, onSave }: InvoiceFo
             <textarea
               value={form.notes}
               onChange={(event) => updateField("notes", event.target.value)}
-              placeholder="Thank you for your business."
             />
           </label>
 
@@ -346,7 +341,6 @@ export function InvoiceForm({ settings, customers, products, onSave }: InvoiceFo
             <textarea
               value={form.terms}
               onChange={(event) => updateField("terms", event.target.value)}
-              placeholder="Payment terms"
             />
           </label>
         </Card>

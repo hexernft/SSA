@@ -1,9 +1,9 @@
-import type { DraftItem, InvoiceStatus, SaleStatus } from "../types";
+import type { DraftItem, InvoiceStatus, NumericInputValue, SaleStatus } from "../types";
 
 export function calculateTotals(
   items: DraftItem[],
-  deliveryFee: number,
-  amountPaid: number
+  deliveryFee: NumericInputValue,
+  amountPaid: NumericInputValue
 ) {
   let subtotal = 0;
   let discountTotal = 0;

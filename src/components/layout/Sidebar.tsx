@@ -69,11 +69,6 @@ export function Sidebar({ activePage, onNavigate, role }: SidebarProps) {
           );
         })}
       </nav>
-
-      <div className="sidebar-note">
-        <strong>Sleek Stitch Only</strong>
-        <span>Staff access is controlled by admin through Manage Staff.</span>
-      </div>
     </aside>
   );
 }

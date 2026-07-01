@@ -140,7 +140,7 @@ export function InvoiceDetails({
           item.id === itemId
             ? {
                 ...item,
-                [key]: key === "description" || key === "productId" ? value : Number(value || 0),
+                [key]: key === "description" || key === "productId" ? value : value === "" ? "" : Number(value),
               }
             : item
         ),
@@ -338,7 +338,7 @@ export function InvoiceDetails({
                 <input
                   type="number"
                   value={form.deliveryFee}
-                  onChange={(event) => updateField("deliveryFee", Number(event.target.value || 0))}
+                  onChange={(event) => updateField("deliveryFee", event.target.value === "" ? "" : Number(event.target.value))}
                 />
               </label>
 
@@ -347,7 +347,7 @@ export function InvoiceDetails({
                 <input
                   type="number"
                   value={form.amountPaid}
-                  onChange={(event) => updateField("amountPaid", Number(event.target.value || 0))}
+                  onChange={(event) => updateField("amountPaid", event.target.value === "" ? "" : Number(event.target.value))}
                 />
               </label>
             </div>

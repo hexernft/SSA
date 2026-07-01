@@ -67,8 +67,8 @@ type OrderForm = {
   orderDate: string;
   dueDate: string;
   status: OrderStatus;
-  totalAmount: number;
-  depositPaid: number;
+  totalAmount: number | "";
+  depositPaid: number | "";
   notes: string;
 };
 
@@ -452,7 +452,7 @@ export function CustomerDetails({
           <form onSubmit={saveOrder}>
             <label className="field">
               <span>Outfit Type / Job</span>
-              <input value={orderForm.outfitType} onChange={(e) => updateOrderField("outfitType", e.target.value)} placeholder="Agbada, senator, alteration..." required />
+              <input value={orderForm.outfitType} onChange={(e) => updateOrderField("outfitType", e.target.value)} required />
             </label>
             <div className="two-grid">
               <label className="field"><span>Order Date</span><input type="date" value={orderForm.orderDate} onChange={(e) => updateOrderField("orderDate", e.target.value)} required /></label>
@@ -471,11 +471,11 @@ export function CustomerDetails({
                   <option value="cancelled">Cancelled</option>
                 </select>
               </label>
-              <label className="field"><span>Total Amount</span><input type="number" value={orderForm.totalAmount} onChange={(e) => updateOrderField("totalAmount", Number(e.target.value || 0))} /></label>
-              <label className="field"><span>Deposit Paid</span><input type="number" value={orderForm.depositPaid} onChange={(e) => updateOrderField("depositPaid", Number(e.target.value || 0))} /></label>
+              <label className="field"><span>Total Amount</span><input type="number" value={orderForm.totalAmount} onChange={(e) => updateOrderField("totalAmount", e.target.value === "" ? "" : Number(e.target.value))} /></label>
+              <label className="field"><span>Deposit Paid</span><input type="number" value={orderForm.depositPaid} onChange={(e) => updateOrderField("depositPaid", e.target.value === "" ? "" : Number(e.target.value))} /></label>
               <label className="field"><span>Balance</span><input value={formatMoney(Math.max(Number(orderForm.totalAmount || 0) - Number(orderForm.depositPaid || 0), 0), "₦")} readOnly /></label>
             </div>
-            <label className="field"><span>Notes</span><textarea value={orderForm.notes} onChange={(e) => updateOrderField("notes", e.target.value)} placeholder="Fabric, fitting, delivery, customer request..." /></label>
+            <label className="field"><span>Notes</span><textarea value={orderForm.notes} onChange={(e) => updateOrderField("notes", e.target.value)} /></label>
             <div className="button-row">
               <Button type="submit">{orderForm.id ? "Update Job" : "Save Job"}</Button>
               {orderForm.id ? <Button type="button" variant="secondary" onClick={() => setOrderForm(emptyOrderForm)}>Cancel Edit</Button> : null}
@@ -517,7 +517,7 @@ export function CustomerDetails({
         <Card>
           <h3>{measurementForm.id ? "Edit Measurement" : "Add Measurement"}</h3>
           <form onSubmit={saveMeasurement}>
-            <label className="field"><span>Title / Purpose</span><input value={measurementForm.title} onChange={(e) => updateMeasurementField("title", e.target.value)} placeholder="Regular native wear, wedding outfit..." required /></label>
+            <label className="field"><span>Title / Purpose</span><input value={measurementForm.title} onChange={(e) => updateMeasurementField("title", e.target.value)} required /></label>
             <label className="field"><span>Date Taken</span><input type="date" value={measurementForm.dateTaken} onChange={(e) => updateMeasurementField("dateTaken", e.target.value)} /></label>
             <div className="measurement-grid">
               {[
@@ -532,12 +532,11 @@ export function CustomerDetails({
                   <input
                     value={measurementForm[key as keyof MeasurementForm] as string}
                     onChange={(e) => updateMeasurementField(key as keyof MeasurementForm, e.target.value)}
-                    placeholder="0"
                   />
                 </label>
               ))}
             </div>
-            <label className="field"><span>Notes</span><textarea value={measurementForm.notes} onChange={(e) => updateMeasurementField("notes", e.target.value)} placeholder="Fit preference, posture, style adjustment..." /></label>
+            <label className="field"><span>Notes</span><textarea value={measurementForm.notes} onChange={(e) => updateMeasurementField("notes", e.target.value)} /></label>
             <div className="button-row">
               <Button type="submit">{measurementForm.id ? "Update Measurement" : "Save Measurement"}</Button>
               {measurementForm.id ? <Button type="button" variant="secondary" onClick={() => setMeasurementForm(emptyMeasurementForm)}>Cancel Edit</Button> : null}
@@ -587,7 +586,7 @@ export function CustomerDetails({
         <Card>
           <h3>{specialDateForm.id ? "Edit Special Date" : "Add Special Date"}</h3>
           <form onSubmit={saveSpecialDate}>
-            <label className="field"><span>Title</span><input value={specialDateForm.title} onChange={(e) => updateSpecialDateField("title", e.target.value)} placeholder="Spouse birthday, child birthday..." required /></label>
+            <label className="field"><span>Title</span><input value={specialDateForm.title} onChange={(e) => updateSpecialDateField("title", e.target.value)} required /></label>
             <div className="two-grid">
               <label className="field"><span>Date</span><input type="date" value={specialDateForm.date} onChange={(e) => updateSpecialDateField("date", e.target.value)} required /></label>
               <label className="field">
@@ -599,7 +598,7 @@ export function CustomerDetails({
                 </select>
               </label>
             </div>
-            <label className="field"><span>Notes</span><textarea value={specialDateForm.notes} onChange={(e) => updateSpecialDateField("notes", e.target.value)} placeholder="Gift idea, reminder note..." /></label>
+            <label className="field"><span>Notes</span><textarea value={specialDateForm.notes} onChange={(e) => updateSpecialDateField("notes", e.target.value)} /></label>
             <div className="button-row">
               <Button type="submit">{specialDateForm.id ? "Update Date" : "Save Date"}</Button>
               {specialDateForm.id ? <Button type="button" variant="secondary" onClick={() => setSpecialDateForm(emptySpecialDateForm)}>Cancel Edit</Button> : null}

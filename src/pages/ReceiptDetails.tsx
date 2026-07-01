@@ -126,7 +126,7 @@ export function ReceiptDetails({ settings, receipt, onBack, onUpdated }: Receipt
               <input
                 type="number"
                 value={form.amount}
-                onChange={(event) => updateField("amount", Number(event.target.value || 0))}
+                onChange={(event) => updateField("amount", event.target.value === "" ? "" : Number(event.target.value))}
                 required
               />
             </label>

@@ -54,7 +54,6 @@ export function Settings({ settings, onSettingsSaved }: SettingsProps) {
             <input
               value={form.businessName}
               onChange={(event) => updateField("businessName", event.target.value)}
-              placeholder="Your business name"
             />
           </label>
 
@@ -63,7 +62,6 @@ export function Settings({ settings, onSettingsSaved }: SettingsProps) {
             <textarea
               value={form.businessAddress}
               onChange={(event) => updateField("businessAddress", event.target.value)}
-              placeholder="Business address"
             />
           </label>
 
@@ -73,7 +71,6 @@ export function Settings({ settings, onSettingsSaved }: SettingsProps) {
               <input
                 value={form.businessPhone}
                 onChange={(event) => updateField("businessPhone", event.target.value)}
-                placeholder="+234..."
               />
             </label>
 
@@ -82,7 +79,6 @@ export function Settings({ settings, onSettingsSaved }: SettingsProps) {
               <input
                 value={form.businessEmail}
                 onChange={(event) => updateField("businessEmail", event.target.value)}
-                placeholder="hello@example.com"
               />
             </label>
           </div>
@@ -110,7 +106,6 @@ export function Settings({ settings, onSettingsSaved }: SettingsProps) {
               <input
                 value={form.invoicePrefix}
                 onChange={(event) => updateField("invoicePrefix", event.target.value)}
-                placeholder="SSA-INV"
               />
             </label>
 
@@ -119,7 +114,6 @@ export function Settings({ settings, onSettingsSaved }: SettingsProps) {
               <input
                 value={form.salePrefix}
                 onChange={(event) => updateField("salePrefix", event.target.value)}
-                placeholder="SSA-SALE"
               />
             </label>
 
@@ -128,7 +122,6 @@ export function Settings({ settings, onSettingsSaved }: SettingsProps) {
               <input
                 value={form.orderPrefix}
                 onChange={(event) => updateField("orderPrefix", event.target.value)}
-                placeholder="SSA-ORD"
               />
             </label>
 
@@ -137,7 +130,6 @@ export function Settings({ settings, onSettingsSaved }: SettingsProps) {
               <input
                 value={form.receiptPrefix}
                 onChange={(event) => updateField("receiptPrefix", event.target.value)}
-                placeholder="SSA-RCP"
               />
             </label>
 
@@ -146,7 +138,7 @@ export function Settings({ settings, onSettingsSaved }: SettingsProps) {
               <input
                 type="number"
                 value={form.defaultTaxRate}
-                onChange={(event) => updateField("defaultTaxRate", Number(event.target.value || 0))}
+                onChange={(event) => updateField("defaultTaxRate", event.target.value === "" ? 0 : Number(event.target.value))}
               />
             </label>
           </div>
@@ -168,7 +160,6 @@ export function Settings({ settings, onSettingsSaved }: SettingsProps) {
             <input
               value={form.bankName}
               onChange={(event) => updateField("bankName", event.target.value)}
-              placeholder="Bank name"
             />
           </label>
 
@@ -177,7 +168,6 @@ export function Settings({ settings, onSettingsSaved }: SettingsProps) {
             <input
               value={form.accountName}
               onChange={(event) => updateField("accountName", event.target.value)}
-              placeholder="Account name"
             />
           </label>
 
@@ -186,7 +176,6 @@ export function Settings({ settings, onSettingsSaved }: SettingsProps) {
             <input
               value={form.accountNumber}
               onChange={(event) => updateField("accountNumber", event.target.value)}
-              placeholder="Account number"
             />
           </label>
         </Card>

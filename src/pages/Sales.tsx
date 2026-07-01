@@ -75,7 +75,6 @@ export function Sales({ sales, onOpenSale, onAddSale }: SalesProps) {
             <input
               value={search}
               onChange={(event) => setSearch(event.target.value)}
-              placeholder="Search sale, customer, phone..."
             />
           </label>
 

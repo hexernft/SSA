@@ -24,7 +24,7 @@ type ReceiptForm = {
   customerId: string;
   customerName: string;
   paymentDate: string;
-  amount: number;
+  amount: number | "";
   method: PaymentMethod;
   reference: string;
   description: string;
@@ -203,7 +203,6 @@ export function Receipts({
               <input
                 value={form.customerName}
                 onChange={(event) => updateField("customerName", event.target.value)}
-                placeholder="Customer name"
                 required
               />
             </label>
@@ -224,7 +223,7 @@ export function Receipts({
                 <input
                   type="number"
                   value={form.amount}
-                  onChange={(event) => updateField("amount", Number(event.target.value || 0))}
+                  onChange={(event) => updateField("amount", event.target.value === "" ? "" : Number(event.target.value))}
                   required
                 />
               </label>
@@ -248,7 +247,6 @@ export function Receipts({
                 <input
                   value={form.reference}
                   onChange={(event) => updateField("reference", event.target.value)}
-                  placeholder="Transfer ref, POS ref..."
                 />
               </label>
             </div>
@@ -258,7 +256,6 @@ export function Receipts({
               <input
                 value={form.description}
                 onChange={(event) => updateField("description", event.target.value)}
-                placeholder="Deposit for Agbada, balance payment..."
               />
             </label>
 
@@ -314,7 +311,6 @@ export function Receipts({
               <textarea
                 value={form.notes}
                 onChange={(event) => updateField("notes", event.target.value)}
-                placeholder="Optional receipt note"
               />
             </label>
 
@@ -330,7 +326,6 @@ export function Receipts({
             <input
               value={search}
               onChange={(event) => setSearch(event.target.value)}
-              placeholder="Search receipt, customer, reference..."
             />
           </label>
 

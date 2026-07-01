@@ -10,7 +10,7 @@ import {
   getSettings,
 } from "../db/database";
 import { calculateTotals, getInvoiceStatus, getSaleStatus } from "../lib/calculations";
-import { listCustomers } from "../lib/customerStore";
+import { listCustomers, saveCustomerRecord } from "../lib/customerStore";
 import { createId } from "../lib/ids";
 import { getUpcomingOrders } from "../lib/orderReminders";
 import { getUpcomingCelebrations } from "../lib/reminders";
@@ -347,10 +347,12 @@ export function App() {
     const shouldCreateLinkedSale = totals.amountPaid > 0 || status === "paid" || status === "part_paid";
     const linkedSaleNumber = shouldCreateLinkedSale ? await getNextSaleNumber() : undefined;
 
+    const linkedCustomerId = await saveInvoiceCustomerIfNeeded(form, now);
+
     const invoice: Invoice = {
       id: invoiceId,
       invoiceNumber,
-      customerId: form.customerId || undefined,
+      customerId: linkedCustomerId,
       customerName: form.customerName,
       customerPhone: form.customerPhone,
       customerEmail: form.customerEmail,
@@ -409,6 +411,62 @@ export function App() {
 
     await refreshData();
     await openInvoice(invoiceId);
+  }
+
+  async function saveInvoiceCustomerIfNeeded(form: InvoiceFormState, now: string) {
+    if (form.customerId) return form.customerId;
+
+    const name = form.customerName.trim();
+    const phone = form.customerPhone.trim();
+    const email = form.customerEmail.trim();
+    const address = form.customerAddress.trim();
+
+    if (!name && !phone && !email && !address) return undefined;
+
+    const normalizedPhone = phone.toLowerCase();
+    const normalizedEmail = email.toLowerCase();
+    const normalizedName = name.toLowerCase();
+
+    const existingCustomer = customers.find((customer) => {
+      if (phone && customer.phone.toLowerCase() === normalizedPhone) return true;
+      if (email && customer.email.toLowerCase() === normalizedEmail) return true;
+      return Boolean(name && customer.name.toLowerCase() === normalizedName);
+    });
+
+    if (existingCustomer) {
+      const mergedCustomer: Customer = {
+        ...existingCustomer,
+        name: name || existingCustomer.name,
+        phone: phone || existingCustomer.phone,
+        email: email || existingCustomer.email,
+        address: address || existingCustomer.address,
+        updatedAt: now,
+      };
+
+      await saveCustomerRecord(mergedCustomer);
+      return mergedCustomer.id;
+    }
+
+    const customer: Customer = {
+      id: createId("customer"),
+      name,
+      phone,
+      email,
+      address,
+      birthday: "",
+      weddingAnniversary: "",
+      spouseName: "",
+      preferredStyle: "",
+      preferredColor: "",
+      preferredFabric: "",
+      fitNotes: "",
+      notes: "",
+      createdAt: now,
+      updatedAt: now,
+    };
+
+    await saveCustomerRecord(customer);
+    return customer.id;
   }
 
   async function recordInvoiceAsSale(invoiceId: string) {

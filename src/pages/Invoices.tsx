@@ -75,7 +75,6 @@ export function Invoices({ invoices, onOpenInvoice, onCreateInvoice }: InvoicesP
             <input
               value={search}
               onChange={(event) => setSearch(event.target.value)}
-              placeholder="Search invoice, customer, phone..."
             />
           </label>
 

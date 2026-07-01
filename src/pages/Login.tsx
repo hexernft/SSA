@@ -78,7 +78,6 @@ export function Login({ error = "" }: LoginProps) {
               type="text"
               value={username}
               onChange={(event) => setUsername(event.target.value)}
-              placeholder="e.g. blessing"
               autoComplete="username"
               required
             />
@@ -90,7 +89,6 @@ export function Login({ error = "" }: LoginProps) {
               type="password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
-              placeholder="Enter password"
               autoComplete="current-password"
               required
             />

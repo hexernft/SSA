@@ -199,7 +199,6 @@ export function Customers({ customers, invoices, sales, onChanged, onOpenCustome
               <input
                 value={form.name}
                 onChange={(event) => updateField("name", event.target.value)}
-                placeholder="Customer name"
                 required
               />
             </label>
@@ -210,7 +209,6 @@ export function Customers({ customers, invoices, sales, onChanged, onOpenCustome
                 <input
                   value={form.phone}
                   onChange={(event) => updateField("phone", event.target.value)}
-                  placeholder="+234..."
                 />
               </label>
 
@@ -219,7 +217,6 @@ export function Customers({ customers, invoices, sales, onChanged, onOpenCustome
                 <input
                   value={form.email}
                   onChange={(event) => updateField("email", event.target.value)}
-                  placeholder="customer@example.com"
                 />
               </label>
             </div>
@@ -229,7 +226,6 @@ export function Customers({ customers, invoices, sales, onChanged, onOpenCustome
               <textarea
                 value={form.address}
                 onChange={(event) => updateField("address", event.target.value)}
-                placeholder="Customer address"
               />
             </label>
 
@@ -257,7 +253,6 @@ export function Customers({ customers, invoices, sales, onChanged, onOpenCustome
                 <input
                   value={form.spouseName}
                   onChange={(event) => updateField("spouseName", event.target.value)}
-                  placeholder="Optional"
                 />
               </label>
 
@@ -266,7 +261,6 @@ export function Customers({ customers, invoices, sales, onChanged, onOpenCustome
                 <input
                   value={form.preferredStyle}
                   onChange={(event) => updateField("preferredStyle", event.target.value)}
-                  placeholder="Native, luxury, senator..."
                 />
               </label>
 
@@ -275,7 +269,6 @@ export function Customers({ customers, invoices, sales, onChanged, onOpenCustome
                 <input
                   value={form.preferredColor}
                   onChange={(event) => updateField("preferredColor", event.target.value)}
-                  placeholder="Black, cream, navy..."
                 />
               </label>
 
@@ -284,7 +277,6 @@ export function Customers({ customers, invoices, sales, onChanged, onOpenCustome
                 <input
                   value={form.preferredFabric}
                   onChange={(event) => updateField("preferredFabric", event.target.value)}
-                  placeholder="Cashmere, senator, linen..."
                 />
               </label>
             </div>
@@ -294,7 +286,6 @@ export function Customers({ customers, invoices, sales, onChanged, onOpenCustome
               <textarea
                 value={form.fitNotes}
                 onChange={(event) => updateField("fitNotes", event.target.value)}
-                placeholder="Slim fit, loose trousers, long sleeves..."
               />
             </label>
 
@@ -303,7 +294,6 @@ export function Customers({ customers, invoices, sales, onChanged, onOpenCustome
               <textarea
                 value={form.notes}
                 onChange={(event) => updateField("notes", event.target.value)}
-                placeholder="Customer preferences, relationship notes, etc."
               />
             </label>
 
@@ -326,7 +316,6 @@ export function Customers({ customers, invoices, sales, onChanged, onOpenCustome
             <input
               value={search}
               onChange={(event) => setSearch(event.target.value)}
-              placeholder="Search by name, phone, email, style, fabric"
             />
           </label>
 

@@ -58,7 +58,7 @@ export function SaleForm({ settings, customers, products, onSave }: SaleFormProp
       currency: current.currency || settings.currency || "₦",
       items: current.items.map((item) => ({
         ...item,
-        taxRate: item.taxRate || settings.defaultTaxRate || 0,
+        taxRate: item.taxRate === "" ? "" : item.taxRate || settings.defaultTaxRate || 0,
       })),
     }));
   }, [settings]);
@@ -109,7 +109,7 @@ export function SaleForm({ settings, customers, products, onSave }: SaleFormProp
         item.id === itemId
           ? {
               ...item,
-              [key]: key === "productId" || key === "description" ? value : Number(value || 0),
+              [key]: key === "productId" || key === "description" ? value : value === "" ? "" : Number(value),
             }
           : item
       ),
@@ -177,7 +177,6 @@ export function SaleForm({ settings, customers, products, onSave }: SaleFormProp
             <input
               value={form.customerName}
               onChange={(event) => updateField("customerName", event.target.value)}
-              placeholder="Walk-in customer or customer name"
             />
           </label>
 
@@ -187,7 +186,6 @@ export function SaleForm({ settings, customers, products, onSave }: SaleFormProp
               <input
                 value={form.customerPhone}
                 onChange={(event) => updateField("customerPhone", event.target.value)}
-                placeholder="+234..."
               />
             </label>
 
@@ -196,7 +194,6 @@ export function SaleForm({ settings, customers, products, onSave }: SaleFormProp
               <input
                 value={form.customerEmail}
                 onChange={(event) => updateField("customerEmail", event.target.value)}
-                placeholder="customer@example.com"
               />
             </label>
           </div>
@@ -206,7 +203,6 @@ export function SaleForm({ settings, customers, products, onSave }: SaleFormProp
             <textarea
               value={form.customerAddress}
               onChange={(event) => updateField("customerAddress", event.target.value)}
-              placeholder="Customer address"
             />
           </label>
         </Card>
@@ -271,7 +267,7 @@ export function SaleForm({ settings, customers, products, onSave }: SaleFormProp
               <input
                 type="number"
                 value={form.deliveryFee}
-                onChange={(event) => updateField("deliveryFee", Number(event.target.value || 0))}
+                onChange={(event) => updateField("deliveryFee", event.target.value === "" ? "" : Number(event.target.value))}
               />
             </label>
 
@@ -280,7 +276,7 @@ export function SaleForm({ settings, customers, products, onSave }: SaleFormProp
               <input
                 type="number"
                 value={form.amountPaid}
-                onChange={(event) => updateField("amountPaid", Number(event.target.value || 0))}
+                onChange={(event) => updateField("amountPaid", event.target.value === "" ? "" : Number(event.target.value))}
               />
             </label>
           </div>
@@ -305,7 +301,6 @@ export function SaleForm({ settings, customers, products, onSave }: SaleFormProp
             <textarea
               value={form.note}
               onChange={(event) => updateField("note", event.target.value)}
-              placeholder="Optional sale note"
             />
           </label>
         </Card>

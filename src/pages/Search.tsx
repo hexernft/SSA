@@ -397,7 +397,6 @@ export function Search({
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Try customer name, phone, order number, outfit, receipt reference..."
               autoFocus
             />
           </label>

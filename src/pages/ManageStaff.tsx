@@ -108,7 +108,6 @@ export function ManageStaff({ currentProfile }: ManageStaffProps) {
               <input
                 value={newFullName}
                 onChange={(event) => setNewFullName(event.target.value)}
-                placeholder="Staff full name"
                 required
               />
             </label>
@@ -118,7 +117,6 @@ export function ManageStaff({ currentProfile }: ManageStaffProps) {
               <input
                 value={newUsername}
                 onChange={(event) => setNewUsername(event.target.value)}
-                placeholder="e.g. blessing"
                 autoComplete="off"
                 required
               />
@@ -130,7 +128,6 @@ export function ManageStaff({ currentProfile }: ManageStaffProps) {
                 type="password"
                 value={newPassword}
                 onChange={(event) => setNewPassword(event.target.value)}
-                placeholder="Minimum 6 characters"
                 autoComplete="new-password"
                 required
               />
@@ -184,7 +181,7 @@ export function ManageStaff({ currentProfile }: ManageStaffProps) {
                       <strong>{profile.fullName}</strong>
                       <span className="table-subtext">{profile.id === currentProfile.id ? "Current account" : "Staff account"}</span>
                     </td>
-                    <td>{profile.username || "—"}</td>
+                    <td>{profile.username || "â€”"}</td>
                     <td>
                       <select
                         value={profile.role}

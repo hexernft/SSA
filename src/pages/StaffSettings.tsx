@@ -129,7 +129,6 @@ export function StaffSettings({ profile, onProfileSaved }: StaffSettingsProps) {
               <input
                 value={fullName}
                 onChange={(event) => setFullName(event.target.value)}
-                placeholder="Your full name"
                 autoComplete="name"
                 required
               />
