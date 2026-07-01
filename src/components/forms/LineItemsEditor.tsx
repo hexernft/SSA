@@ -11,11 +11,12 @@ type LineItemsEditorProps = {
   items: CalculatedItem[];
   products: Product[];
   defaultTaxRate: number;
+  showProductDetails?: boolean;
   onAddItem: () => void;
   onRemoveItem: (itemId: string) => void;
   onUpdateItem: (
     itemId: string,
-    key: "productId" | "description" | "quantity" | "unitPrice" | "discount" | "taxRate",
+    key: "productId" | "description" | "productDetails" | "quantity" | "unitPrice" | "discount" | "taxRate",
     value: string | number
   ) => void;
 };
@@ -25,6 +26,7 @@ export function LineItemsEditor({
   items,
   products,
   defaultTaxRate,
+  showProductDetails = false,
   onAddItem,
   onRemoveItem,
   onUpdateItem,
@@ -36,7 +38,8 @@ export function LineItemsEditor({
 
     if (!product) return;
 
-    onUpdateItem(itemId, "description", product.description || product.name);
+    onUpdateItem(itemId, "description", product.name);
+    onUpdateItem(itemId, "productDetails", product.description || "");
     onUpdateItem(itemId, "unitPrice", product.defaultPrice);
     onUpdateItem(itemId, "taxRate", product.taxable ? defaultTaxRate : 0);
   }
@@ -57,6 +60,7 @@ export function LineItemsEditor({
             <tr>
               <th>Saved Item</th>
               <th>Description</th>
+              {showProductDetails ? <th>Product Details</th> : null}
               <th>Qty</th>
               <th>Unit Price</th>
               <th>Discount</th>
@@ -90,6 +94,15 @@ export function LineItemsEditor({
                     required
                   />
                 </td>
+
+                {showProductDetails ? (
+                  <td>
+                    <textarea
+                      value={item.productDetails || ""}
+                      onChange={(event) => onUpdateItem(item.id, "productDetails", event.target.value)}
+                    />
+                  </td>
+                ) : null}
 
                 <td>
                   <input

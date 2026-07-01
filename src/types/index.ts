@@ -211,6 +211,7 @@ export type InvoiceItem = {
   id: string;
   invoiceId: string;
   description: string;
+  productDetails?: string;
   quantity: number;
   unitPrice: number;
   discount: number;
@@ -297,6 +298,7 @@ export type DraftItem = {
   id: string;
   productId?: string;
   description: string;
+  productDetails?: string;
   quantity: NumericInputValue;
   unitPrice: NumericInputValue;
   discount: NumericInputValue;

@@ -46,6 +46,7 @@ export function InvoiceForm({ settings, customers, products, onSave }: InvoiceFo
         id: createId("draft_item"),
         productId: "",
         description: "",
+        productDetails: "",
         quantity: 1,
         unitPrice: 0,
         discount: 0,
@@ -105,7 +106,7 @@ export function InvoiceForm({ settings, customers, products, onSave }: InvoiceFo
 
   function updateItem(
     itemId: string,
-    key: "productId" | "description" | "quantity" | "unitPrice" | "discount" | "taxRate",
+    key: "productId" | "description" | "productDetails" | "quantity" | "unitPrice" | "discount" | "taxRate",
     value: string | number
   ) {
     setForm((current) => ({
@@ -114,7 +115,7 @@ export function InvoiceForm({ settings, customers, products, onSave }: InvoiceFo
         item.id === itemId
           ? {
               ...item,
-              [key]: key === "productId" || key === "description" ? value : value === "" ? "" : Number(value),
+              [key]: key === "productId" || key === "description" || key === "productDetails" ? value : value === "" ? "" : Number(value),
             }
           : item
       ),
@@ -130,6 +131,7 @@ export function InvoiceForm({ settings, customers, products, onSave }: InvoiceFo
           id: createId("draft_item"),
           productId: "",
           description: "",
+          productDetails: "",
           quantity: 1,
           unitPrice: 0,
           discount: 0,
@@ -319,6 +321,7 @@ export function InvoiceForm({ settings, customers, products, onSave }: InvoiceFo
         items={totals.calculatedItems}
         products={products}
         defaultTaxRate={settings?.defaultTaxRate || 0}
+        showProductDetails
         onAddItem={addItem}
         onRemoveItem={removeItem}
         onUpdateItem={updateItem}

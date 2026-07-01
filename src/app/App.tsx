@@ -378,6 +378,7 @@ export function App() {
       id: createId("invoice_item"),
       invoiceId,
       description: item.description,
+      productDetails: item.productDetails || "",
       quantity: item.quantity,
       unitPrice: item.unitPrice,
       discount: item.discount,

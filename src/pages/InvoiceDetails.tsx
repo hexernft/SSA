@@ -51,6 +51,7 @@ export function InvoiceDetails({
       items: items.map((item) => ({
         id: item.id,
         description: item.description,
+        productDetails: item.productDetails || "",
         quantity: item.quantity,
         unitPrice: item.unitPrice,
         discount: item.discount,
@@ -112,6 +113,7 @@ export function InvoiceDetails({
       items: items.map((item) => ({
         id: item.id,
         description: item.description,
+        productDetails: item.productDetails || "",
         quantity: item.quantity,
         unitPrice: item.unitPrice,
         discount: item.discount,
@@ -128,7 +130,7 @@ export function InvoiceDetails({
 
   function updateItem(
     itemId: string,
-    key: "productId" | "description" | "quantity" | "unitPrice" | "discount" | "taxRate",
+    key: "productId" | "description" | "productDetails" | "quantity" | "unitPrice" | "discount" | "taxRate",
     value: string | number
   ) {
     setForm((current) => {
@@ -140,7 +142,7 @@ export function InvoiceDetails({
           item.id === itemId
             ? {
                 ...item,
-                [key]: key === "description" || key === "productId" ? value : value === "" ? "" : Number(value),
+                [key]: key === "description" || key === "productId" || key === "productDetails" ? value : value === "" ? "" : Number(value),
               }
             : item
         ),
@@ -159,6 +161,7 @@ export function InvoiceDetails({
           {
             id: createId("draft_item"),
             description: "",
+            productDetails: "",
             quantity: 1,
             unitPrice: 0,
             discount: 0,
@@ -212,6 +215,7 @@ export function InvoiceDetails({
           id: createId("invoice_item"),
           invoiceId: invoiceRecord.id,
           description: item.description,
+          productDetails: item.productDetails || "",
           quantity: item.quantity,
           unitPrice: item.unitPrice,
           discount: item.discount,
@@ -359,6 +363,7 @@ export function InvoiceDetails({
           items={totals.calculatedItems}
           products={[]}
           defaultTaxRate={settings?.defaultTaxRate || 0}
+          showProductDetails
           onAddItem={addItem}
           onRemoveItem={removeItem}
           onUpdateItem={updateItem}

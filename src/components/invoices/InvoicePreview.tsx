@@ -61,7 +61,10 @@ export function InvoicePreview({ settings, invoice, items }: InvoicePreviewProps
           <tbody>
             {items.map((item) => (
               <tr key={item.id}>
-                <td>{item.description}</td>
+                <td>
+                  <strong>{item.description}</strong>
+                  {item.productDetails ? <span className="table-subtext">{item.productDetails}</span> : null}
+                </td>
                 <td>{item.quantity}</td>
                 <td>{formatMoney(item.unitPrice, invoice.currency)}</td>
                 <td>{formatMoney(item.discount, invoice.currency)}</td>

@@ -42,6 +42,7 @@ export function SaleForm({ settings, customers, products, onSave }: SaleFormProp
         id: createId("draft_item"),
         productId: "",
         description: "",
+        productDetails: "",
         quantity: 1,
         unitPrice: 0,
         discount: 0,
@@ -100,7 +101,7 @@ export function SaleForm({ settings, customers, products, onSave }: SaleFormProp
 
   function updateItem(
     itemId: string,
-    key: "productId" | "description" | "quantity" | "unitPrice" | "discount" | "taxRate",
+    key: "productId" | "description" | "productDetails" | "quantity" | "unitPrice" | "discount" | "taxRate",
     value: string | number
   ) {
     setForm((current) => ({
@@ -109,7 +110,7 @@ export function SaleForm({ settings, customers, products, onSave }: SaleFormProp
         item.id === itemId
           ? {
               ...item,
-              [key]: key === "productId" || key === "description" ? value : value === "" ? "" : Number(value),
+              [key]: key === "productId" || key === "description" || key === "productDetails" ? value : value === "" ? "" : Number(value),
             }
           : item
       ),
@@ -125,6 +126,7 @@ export function SaleForm({ settings, customers, products, onSave }: SaleFormProp
           id: createId("draft_item"),
           productId: "",
           description: "",
+          productDetails: "",
           quantity: 1,
           unitPrice: 0,
           discount: 0,
