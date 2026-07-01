@@ -11,6 +11,7 @@ import {
   ShieldCheck,
   TrendingUp,
   Users,
+  UserCog,
 } from "lucide-react";
 import type { Page, UserRole } from "../../types";
 import logoLight from "../../assets/logo-light.png";
@@ -33,10 +34,11 @@ const items: Array<{
   { label: "Customers", page: "customers", icon: Users },
   { label: "Jobs", page: "orders", icon: ClipboardList },
   { label: "Receipts", page: "receipts", icon: Receipt },
+  { label: "Products / Services", page: "products", icon: Package },
+  { label: "My Settings", page: "staff-settings", icon: UserCog },
   { label: "Reports", page: "reports", icon: TrendingUp, adminOnly: true },
-  { label: "Products / Services", page: "products", icon: Package, adminOnly: true },
   { label: "Manage Staff", page: "manage-staff", icon: ShieldCheck, adminOnly: true },
-  { label: "Settings", page: "settings", icon: Settings, adminOnly: true },
+  { label: "Business Settings", page: "settings", icon: Settings, adminOnly: true },
   { label: "Backup", page: "backup", icon: ArchiveRestore, adminOnly: true },
 ];
 

@@ -41,7 +41,7 @@ export function Dashboard({
   const recentSales = sales.slice(0, 5);
 
   return (
-    <div>
+    <div className="dashboard-page">
       <div className="page-header">
         <BrandHeader
           title="Command Center"

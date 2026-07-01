@@ -56,6 +56,7 @@ export type Page =
   | "receipt-details"
   | "reports"
   | "settings"
+  | "staff-settings"
   | "backup"
   | "manage-staff";
 

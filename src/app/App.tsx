@@ -17,6 +17,7 @@ import { getUpcomingCelebrations } from "../lib/reminders";
 import { applyTheme, getStoredTheme, type ThemeMode } from "../lib/theme";
 import { supabase } from "../lib/supabase";
 import { getMyProfile } from "../lib/staffProfiles";
+import { startOnlineStorageMirror, syncOnlineStorage } from "../lib/onlineStorage";
 import type {
   BusinessSettings,
   Customer,
@@ -54,8 +55,9 @@ import { SaleDetails } from "../pages/SaleDetails";
 import { Search } from "../pages/Search";
 import { Sales } from "../pages/Sales";
 import { Settings } from "../pages/Settings";
+import { StaffSettings } from "../pages/StaffSettings";
 
-const adminOnlyPages: Page[] = ["reports", "products", "settings", "backup", "manage-staff", "sales", "add-sale", "sale-details"];
+const adminOnlyPages: Page[] = ["reports", "settings", "backup", "manage-staff", "sales", "add-sale", "sale-details"];
 
 function canAccessPage(page: Page, role: UserRole) {
   return role === "admin" || !adminOnlyPages.includes(page);
@@ -114,6 +116,10 @@ export function App() {
   useEffect(() => {
     applyTheme(theme);
   }, [theme]);
+
+  useEffect(() => {
+    startOnlineStorageMirror();
+  }, []);
 
   async function loadProfileForSession(currentSession: Session | null) {
     setSession(currentSession);
@@ -200,6 +206,8 @@ export function App() {
   }
 
   async function refreshData() {
+    await syncOnlineStorage();
+
     const [
       loadedSettings,
       loadedCustomers,
@@ -750,6 +758,10 @@ export function App() {
 
       {activePage === "settings" ? (
         <Settings settings={settings} onSettingsSaved={(savedSettings) => setSettings(savedSettings)} />
+      ) : null}
+
+      {activePage === "staff-settings" ? (
+        <StaffSettings profile={profile} onProfileSaved={setProfile} />
       ) : null}
 
       {activePage === "manage-staff" ? <ManageStaff currentProfile={profile} /> : null}
