@@ -45,12 +45,27 @@ export function Reports({ customers, invoices, sales, orders, receipts }: Report
     [receipts, startDate, endDate]
   );
 
+  const filteredCustomers = useMemo(
+    () => customers.filter((customer) => inRange(customer.createdAt.slice(0, 10), startDate, endDate)),
+    [customers, startDate, endDate]
+  );
+
+  const invoiceValue = filteredInvoices.reduce((sum, invoice) => sum + invoice.grandTotal, 0);
+  const invoicePaid = filteredInvoices.reduce((sum, invoice) => sum + invoice.amountPaid, 0);
+  const invoiceBalance = filteredInvoices.reduce((sum, invoice) => sum + invoice.balanceDue, 0);
   const totalSales = filteredSales.reduce((sum, sale) => sum + sale.grandTotal, 0);
   const totalPaid = filteredSales.reduce((sum, sale) => sum + sale.amountPaid, 0);
   const totalOutstanding = filteredSales.reduce((sum, sale) => sum + sale.balanceDue, 0);
   const receiptTotal = filteredReceipts.reduce((sum, receipt) => sum + receipt.amount, 0);
   const orderValue = filteredOrders.reduce((sum, order) => sum + order.totalAmount, 0);
+  const orderDeposits = filteredOrders.reduce((sum, order) => sum + order.depositPaid, 0);
   const orderBalance = filteredOrders.reduce((sum, order) => sum + order.balanceDue, 0);
+  const totalRecords =
+    filteredCustomers.length +
+    filteredInvoices.length +
+    filteredSales.length +
+    filteredOrders.length +
+    filteredReceipts.length;
 
   const paymentMethodRows = useMemo(() => {
     const result = new Map<string, number>();
@@ -88,15 +103,22 @@ export function Reports({ customers, invoices, sales, orders, receipts }: Report
     downloadCsv(
       `sleek-stitch-report-${new Date().toISOString().slice(0, 10)}.csv`,
       [
+        { metric: "Total Records", value: totalRecords },
+        { metric: "Customers", value: filteredCustomers.length },
+        { metric: "Invoices", value: filteredInvoices.length },
+        { metric: "Invoice Value", value: invoiceValue },
+        { metric: "Invoice Paid", value: invoicePaid },
+        { metric: "Invoice Balance", value: invoiceBalance },
+        { metric: "Sales", value: filteredSales.length },
         { metric: "Total Revenue", value: totalSales },
         { metric: "Total Paid", value: totalPaid },
         { metric: "Outstanding Revenue Balance", value: totalOutstanding },
-        { metric: "Receipt Total", value: receiptTotal },
-        { metric: "Order Value", value: orderValue },
-        { metric: "Order Balance", value: orderBalance },
-        { metric: "Invoices", value: filteredInvoices.length },
-        { metric: "Orders", value: filteredOrders.length },
         { metric: "Receipts", value: filteredReceipts.length },
+        { metric: "Receipt Total", value: receiptTotal },
+        { metric: "Orders", value: filteredOrders.length },
+        { metric: "Order Value", value: orderValue },
+        { metric: "Order Deposits", value: orderDeposits },
+        { metric: "Order Balance", value: orderBalance },
       ]
     );
   }
@@ -126,16 +148,23 @@ export function Reports({ customers, invoices, sales, orders, receipts }: Report
       </Card>
 
       <div className="stats-grid mt">
+        <Card><span className="stat-label">Total Records</span><strong className="stat-value">{totalRecords}</strong></Card>
+        <Card><span className="stat-label">Customers</span><strong className="stat-value">{filteredCustomers.length}</strong></Card>
+        <Card><span className="stat-label">Invoices</span><strong className="stat-value">{filteredInvoices.length}</strong></Card>
+        <Card><span className="stat-label">Invoice Value</span><strong className="stat-value">{formatMoney(invoiceValue, "₦")}</strong></Card>
+        <Card><span className="stat-label">Invoice Paid</span><strong className="stat-value">{formatMoney(invoicePaid, "₦")}</strong></Card>
+        <Card><span className="stat-label">Invoice Balance</span><strong className="stat-value">{formatMoney(invoiceBalance, "₦")}</strong></Card>
+        <Card><span className="stat-label">Sales</span><strong className="stat-value">{filteredSales.length}</strong></Card>
         <Card><span className="stat-label">Revenue Value</span><strong className="stat-value">{formatMoney(totalSales, "₦")}</strong></Card>
         <Card><span className="stat-label">Paid Revenue</span><strong className="stat-value">{formatMoney(totalPaid, "₦")}</strong></Card>
         <Card><span className="stat-label">Revenue Balance</span><strong className="stat-value">{formatMoney(totalOutstanding, "₦")}</strong></Card>
+        <Card><span className="stat-label">Receipts</span><strong className="stat-value">{filteredReceipts.length}</strong></Card>
         <Card><span className="stat-label">Receipt Total</span><strong className="stat-value">{formatMoney(receiptTotal, "₦")}</strong></Card>
-        <Card><span className="stat-label">Order Value</span><strong className="stat-value">{formatMoney(orderValue, "₦")}</strong></Card>
-        <Card><span className="stat-label">Order Balance</span><strong className="stat-value">{formatMoney(orderBalance, "₦")}</strong></Card>
-        <Card><span className="stat-label">Invoices</span><strong className="stat-value">{filteredInvoices.length}</strong></Card>
         <Card><span className="stat-label">Orders</span><strong className="stat-value">{filteredOrders.length}</strong></Card>
+        <Card><span className="stat-label">Order Value</span><strong className="stat-value">{formatMoney(orderValue, "₦")}</strong></Card>
+        <Card><span className="stat-label">Order Deposits</span><strong className="stat-value">{formatMoney(orderDeposits, "₦")}</strong></Card>
+        <Card><span className="stat-label">Order Balance</span><strong className="stat-value">{formatMoney(orderBalance, "₦")}</strong></Card>
       </div>
-
       <div className="form-grid mt">
         <Card>
           <h3>Payment by Method</h3>

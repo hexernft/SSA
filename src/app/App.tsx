@@ -415,20 +415,19 @@ export function App() {
   }
 
   async function saveInvoiceCustomerIfNeeded(form: InvoiceFormState, now: string) {
-    if (form.customerId) return form.customerId;
-
     const name = form.customerName.trim();
     const phone = form.customerPhone.trim();
     const email = form.customerEmail.trim();
     const address = form.customerAddress.trim();
 
-    if (!name && !phone && !email && !address) return undefined;
+    if (!name && !phone && !email && !address) return form.customerId || undefined;
 
     const normalizedPhone = phone.toLowerCase();
     const normalizedEmail = email.toLowerCase();
     const normalizedName = name.toLowerCase();
 
     const existingCustomer = customers.find((customer) => {
+      if (form.customerId && customer.id === form.customerId) return true;
       if (phone && customer.phone.toLowerCase() === normalizedPhone) return true;
       if (email && customer.email.toLowerCase() === normalizedEmail) return true;
       return Boolean(name && customer.name.toLowerCase() === normalizedName);
